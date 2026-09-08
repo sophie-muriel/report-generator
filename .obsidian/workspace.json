@@ -11,10 +11,14 @@
             "id": "873e9018bebb3f7d",
             "type": "leaf",
             "state": {
-              "type": "empty",
-              "state": {},
+              "type": "markdown",
+              "state": {
+                "file": "logs/C03_2026-09-08_Tokens.md",
+                "mode": "source",
+                "source": false
+              },
               "icon": "lucide-file",
-              "title": "New tab"
+              "title": "C03_2026-09-08_Tokens"
             }
           }
         ]
@@ -185,11 +189,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7e21cc53af7a09b4",
+  "active": "873e9018bebb3f7d",
   "lastOpenFiles": [
+    "logs/Plantilla_Bitacora.md",
+    "logs/C03_2026-09-08_Tokens.md",
+    "logs/C02_2026-08-26_Tokens.md",
+    "prompts",
     "notebooks/Report_Generation_Tokens.ipynb",
     "images/Pasted image 20260826195631.png",
-    "logs/C02_2026-08-26_Tokens.md",
     "images",
     "images/Pasted image 20260826202846.png",
     "images/Pasted image 20260826202316.png",
@@ -200,7 +207,6 @@
     "images/Pasted image 20260826201839.png",
     "images/Pasted image 20260826201821.png",
     "images/Pasted image 20260826200042.png",
-    "logs/Plantilla_Bitacora.md",
     "notebooks",
     "logs",
     "report-generator",
