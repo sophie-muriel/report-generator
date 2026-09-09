@@ -11,14 +11,12 @@
             "id": "873e9018bebb3f7d",
             "type": "leaf",
             "state": {
-              "type": "markdown",
+              "type": "image",
               "state": {
-                "file": "logs/C03_2026-09-08_Tokens.md",
-                "mode": "source",
-                "source": false
+                "file": "images/Pasted image 20260909000617.png"
               },
-              "icon": "lucide-file",
-              "title": "C03_2026-09-08_Tokens"
+              "icon": "lucide-image",
+              "title": "Pasted image 20260909000617"
             }
           }
         ]
@@ -189,24 +187,28 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "873e9018bebb3f7d",
+  "active": "7e21cc53af7a09b4",
   "lastOpenFiles": [
-    "logs/Plantilla_Bitacora.md",
-    "logs/C03_2026-09-08_Tokens.md",
+    "logs/C03_2026-09-08_PromptV1.md",
+    "images/Pasted image 20260909001746.png",
+    "images/Pasted image 20260909001348.png",
+    "images/Pasted image 20260909001016.png",
+    "images/Pasted image 20260909000919.png",
+    "images/Pasted image 20260909000809.png",
+    "images/Pasted image 20260909000617.png",
     "logs/C02_2026-08-26_Tokens.md",
+    "images/Pasted image 20260908235001.png",
+    "prompts/SYSTEM_PROMPT_V1.md",
+    "notebooks/Demo_Colab_Groq.ipynb",
+    "notebooks/Demo_Colab_Groq(1).ipynb",
+    "logs/Plantilla_Bitacora.md",
+    "notebooks/Como_crear_API_Groq_Colab.md",
     "prompts",
     "notebooks/Report_Generation_Tokens.ipynb",
     "images/Pasted image 20260826195631.png",
     "images",
     "images/Pasted image 20260826202846.png",
     "images/Pasted image 20260826202316.png",
-    "Pasted image 20260826202244.png",
-    "images/Pasted image 20260826202232.png",
-    "images/Pasted image 20260826202230.png",
-    "images/Pasted image 20260826202228.png",
-    "images/Pasted image 20260826201839.png",
-    "images/Pasted image 20260826201821.png",
-    "images/Pasted image 20260826200042.png",
     "notebooks",
     "logs",
     "report-generator",
