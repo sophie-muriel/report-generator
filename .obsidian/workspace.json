@@ -4,19 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "ff5fd3f07eacf1f9",
+        "id": "b68170d0170d24d9",
         "type": "tabs",
         "children": [
           {
-            "id": "873e9018bebb3f7d",
+            "id": "81388a8227da5f68",
             "type": "leaf",
             "state": {
-              "type": "image",
+              "type": "markdown",
               "state": {
-                "file": "images/Pasted image 20260909000617.png"
+                "file": "logs/C04_2026-09-13_Herramientas.md",
+                "mode": "source",
+                "source": false
               },
-              "icon": "lucide-image",
-              "title": "Pasted image 20260909000617"
+              "icon": "lucide-file",
+              "title": "C04_2026-09-13_Herramientas"
             }
           }
         ]
@@ -187,31 +189,38 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7e21cc53af7a09b4",
+  "active": "81388a8227da5f68",
   "lastOpenFiles": [
+    "README.md",
+    "README.md.md",
+    "images/Pasted image 20260915184446.png",
+    "images/Pasted image 20260915184412.png",
+    "logs/C04_2026-09-13_Herramientas.md",
+    "images/Pasted image 20260915184115.png",
+    "images/Pasted image 20260915183928.png",
+    "images/Pasted image 20260915183548.png",
+    "images/Pasted image 20260915183316.png",
+    "images/Pasted image 20260915183134.png",
+    "prompts/SYSTEM_PROMPT_V2.md",
+    "prompts/SYSTEM_PROMPT_V1.md",
+    "logs/C04_2026-09-15_Herramientas.md",
     "logs/C03_2026-09-08_PromptV1.md",
+    "notebooks/C04_ReportGenerator_1789510735794980198.zip",
+    "notebooks/C04_Herramientas.ipynb",
+    "logs/C02_2026-08-26_Tokens.md",
+    "logs/Plantilla_Bitacora.md",
+    "notebooks/C04_Herramientas.zip",
+    "notebooks/Clase04_report_generator_1789507133813380502.zip",
+    "notebooks/Herramientas.ipynb",
+    "notebooks/Clase_04_Continuacion_Clase_03_Herramientas.ipynb",
+    "images/Pasted image 20260909000617.png",
     "images/Pasted image 20260909001746.png",
     "images/Pasted image 20260909001348.png",
-    "images/Pasted image 20260909001016.png",
-    "images/Pasted image 20260909000919.png",
-    "images/Pasted image 20260909000809.png",
-    "images/Pasted image 20260909000617.png",
-    "logs/C02_2026-08-26_Tokens.md",
-    "images/Pasted image 20260908235001.png",
-    "prompts/SYSTEM_PROMPT_V1.md",
-    "notebooks/Demo_Colab_Groq.ipynb",
+    "notebooks/C03_Demo_Colab_Groq.ipynb",
     "notebooks/Demo_Colab_Groq(1).ipynb",
-    "logs/Plantilla_Bitacora.md",
     "notebooks/Como_crear_API_Groq_Colab.md",
     "prompts",
-    "notebooks/Report_Generation_Tokens.ipynb",
-    "images/Pasted image 20260826195631.png",
-    "images",
-    "images/Pasted image 20260826202846.png",
-    "images/Pasted image 20260826202316.png",
-    "notebooks",
-    "logs",
-    "report-generator",
+    "notebooks/C02_Report_Generation_Tokens.ipynb",
     "Welcome.md"
   ]
 }
