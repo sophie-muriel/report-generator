@@ -57,7 +57,7 @@ Esto es directamente el objetivo del proyecto: borradores verificables, datos au
 - [x] La herramienta es de solo lectura: el catálogo `FUENTES` queda idéntico después de todas las pruebas (`assert` de comparación al final).
 - [x] Un código de fuente que no aparece en el texto del usuario es rechazado antes de ejecutar la consulta.
 - [x] Fuente inexistente (`NO_ENCONTRADA`) y fallo de conexión (`ERROR_HERRAMIENTA`) son estados distintos.
-- [x] Los 11 casos de prueba obtuvieron el estado esperado en modo `mock` (11/11). En modo `groq` (modelo real) el resultado varió entre ejecuciones — 8/11 y 7/11 en dos corridas distintas —, con casos distintos fallando cada vez; se documenta como hallazgo de variabilidad del modelo en la sección 9, no como error de código.
+- [x] Los 11 casos de prueba obtuvieron el estado esperado en modo `mock` (11/11). En modo `groq` (modelo real) el resultado varió entre ejecuciones (8/11 y 7/11 en dos corridas distintas) con casos distintos fallando cada vez; se documenta como hallazgo de variabilidad del modelo en la sección 9, no como error de código.
 - [x] Ninguna métrica ausente aparece como disponible en el borrador (verificado con `assert`).
 
 ### Archivos o componentes modificados

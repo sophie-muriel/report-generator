@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "b68170d0170d24d9",
+        "id": "235d1f11ed114eb5",
         "type": "tabs",
         "children": [
           {
-            "id": "81388a8227da5f68",
+            "id": "49cc3c8c868f50f1",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -189,13 +189,14 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "81388a8227da5f68",
+  "active": "49cc3c8c868f50f1",
   "lastOpenFiles": [
+    "logs/C02_2026-08-26_Tokens.md",
     "README.md",
+    "logs/C04_2026-09-13_Herramientas.md",
     "README.md.md",
     "images/Pasted image 20260915184446.png",
     "images/Pasted image 20260915184412.png",
-    "logs/C04_2026-09-13_Herramientas.md",
     "images/Pasted image 20260915184115.png",
     "images/Pasted image 20260915183928.png",
     "images/Pasted image 20260915183548.png",
@@ -207,7 +208,6 @@
     "logs/C03_2026-09-08_PromptV1.md",
     "notebooks/C04_ReportGenerator_1789510735794980198.zip",
     "notebooks/C04_Herramientas.ipynb",
-    "logs/C02_2026-08-26_Tokens.md",
     "logs/Plantilla_Bitacora.md",
     "notebooks/C04_Herramientas.zip",
     "notebooks/Clase04_report_generator_1789507133813380502.zip",
