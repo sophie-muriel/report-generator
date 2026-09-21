@@ -80,6 +80,45 @@ report-generator/
     └── SYSTEM_PROMPT_V2
 ```
 
+## Instrucciones de Ejecución y Reproducción
+
+Para ejecutar el proyecto y verificar los resultados de las entregas, siga las siguientes instrucciones:
+
+### Requisitos Previos y Variables de Entorno
+
+* **Entorno recomendado:** Google Colab o Python 3.10+ local.
+* **Configuración de Credenciales:**
+  * En Google Colab: Configurar una clave secreta llamada `GROQ_API_KEY` en el menú de *Secrets / Secretos de Colab*.
+  * En entorno local: Definir la variable de entorno `export GROQ_API_KEY=""` o crear un archivo `.env`.
+
+### Guía de Ejecución por Notebook
+
+#### A. Experimento de Tokens e Inferencia Local (`Clase 2`)
+
+1. Abrir `notebooks/C02_Report_Generation_Tokens.ipynb` en Google Colab.
+2. Reproducir la instalación automática de Ollama y la descarga del modelo local.
+3. Ejecutar las celdas de comparación de temperaturas (0.8, 1.7, 2.2) y conteo de tokens.
+
+#### B. Pruebas de Prompts y Clasificación (`Clase 3`)
+
+1. Abrir `notebooks/C03_Demo_Colab_Groq.ipynb` en Google Colab.
+2. Definir `MODO_DEMO = "groq"` o `"mock"`.
+3. Ejecutar secuencialmente para observar la validación con Pydantic del contrato `Solicitud` y los 5 casos de prueba base.
+
+#### C. Llamada de Herramientas e Integración Completa (`Clase 4`)
+
+&gt; **Punto de entrada principal para revisar el prototipo completo del Corte 1.**
+
+1. Abrir `notebooks/C04_Herramientas.ipynb` en Google Colab.
+2. Seleccionar la modalidad en la celda de configuración inicial:
+   * `MODO = "groq"` (ejecución real con la API de Groq y el modelo `openai/gpt-oss-20b`).
+   * `MODO = "mock"` (ejecución sin consumo de API ni necesidad de credenciales).
+3. **Ingreso de una solicitud nueva:** Ir a la **Sección 9 ("Petición de Informe: Edita y Pulsa ▶")**, modificar la variable `texto_usuario` (p. ej.: `"Genera el reporte ejecutivo del último trimestre con los ingresos por región y la tasa de retención de clientes, usando la fuente DS-1001."`) y ejecutar la celda.
+4. **Reproducción de Pruebas:**
+   * Ejecutar la **Sección 10** para correr la matriz de 11 casos de prueba (normales, ambiguos, incompletos, maliciosos, fuera de alcance y consultas de fuentes).
+   * Ejecutar la **Sección 11** para verificar las pruebas negativas deterministas (rechazo de código no citado, fallos controlados y preservación del catálogo).
+5. **Exportación de Evidencias:** Ejecutar la **Sección 13** para generar el paquete comprimido `.zip` con esquemas, trazas y bitácora.
+
 ## Tecnologías y Herramientas
 
 * **Lenguaje:** Python 3.10+
