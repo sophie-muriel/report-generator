@@ -16,6 +16,28 @@
 * **Sophie Rosero Muriel:** Soporte técnico en notebooks, verificación de pruebas y registro continuo en bitácoras.
 
 ---
+## Estructura del Repositorio
+
+```text
+report-generator/
+├── .obsidian/               # Configuración del vault de Obsidian
+├── images/                  # Capturas de pantalla y evidencias de ejecución
+├── logs/                    # Bitácoras de clase en Markdown (C02, C03, C04)
+│   ├── C02_2026-08-26_Tokens.md
+│   ├── C03_2026-09-08_PromptV1.md
+│   └── C04_2026-09-13_Herramientas.md
+├── notebooks/               # Notebooks ejecutables en Google Colab
+│   ├── C02_Report_Generation_Tokens.ipynb
+│   ├── C03_Demo_Colab_Groq.ipynb
+│   └── C04_Herramientas.ipynb
+├── presentations/               # Presentaciones finales
+│   ├── presentacion-corte1-juliofi.html
+│   └── presentacion-corte1-juliofi.pdf
+└── prompts/                 # Especificaciones y versiones del prompt del sistema
+    ├── SYSTEM_PROMPT_V1
+    └── SYSTEM_PROMPT_V2
+```
+
 ## Descripción del Proyecto
 
 *Report Generator* es un sistema inteligente diseñado para automatizar la construcción de borradores de informes empresariales (ejecutivos, técnicos, resúmenes periódicos y generales) garantizando rigor factual, trazabilidad y control estricto sobre los datos.
@@ -60,25 +82,6 @@ El proyecto ha evolucionado de forma incremental a través de los laboratorios a
 * **Enfoque:** Integración de la herramienta de solo lectura `consultar_fuente_datos` sobre un catálogo ficticio de fuentes de datos (`DS-1001`, `DS-1002`, `DS-1003`).
 * **Segunda Barrera Pydantic:** Validación de argumentos (`ArgumentosFuente`) exigiendo el patrón `DS-0000` y comprobando que el código citado aparezca literalmente en la entrada del usuario.
 * **Algoritmo Determinista:** Reconocimiento de métricas con vocabulario cerrado, contraste entre métricas solicitadas vs. disponibles y redacción de borradores no verificados con advertencias explícitas de ausencia.
-
-## Estructura del Repositorio
-
-```text
-report-generator/
-├── .obsidian/               # Configuración del vault de Obsidian
-├── images/                  # Capturas de pantalla y evidencias de ejecución
-├── logs/                    # Bitácoras de clase en Markdown (C02, C03, C04)
-│   ├── C02_2026-08-26_Tokens.md
-│   ├── C03_2026-09-08_PromptV1.md
-│   └── C04_2026-09-13_Herramientas.md
-├── notebooks/               # Notebooks ejecutables en Google Colab
-│   ├── C02_Report_Generation_Tokens.ipynb
-│   ├── C03_Demo_Colab_Groq.ipynb
-│   └── C04_Herramientas.ipynb
-└── prompts/                 # Especificaciones y versiones del prompt del sistema
-    ├── SYSTEM_PROMPT_V1
-    └── SYSTEM_PROMPT_V2
-```
 
 ## Instrucciones de Ejecución y Reproducción
 
