@@ -3,10 +3,10 @@
 ---
 # Report Generator (Generador de Informes con IA)
 
-<img width="4096" height="1934" alt="ollama-tool" src="https://github.com/user-attachments/assets/7f8a29db-4182-4cc8-b304-b7f8e18d388d" />
+<img alt="ollama-tool" src="https://github.com/user-attachments/assets/7f8a29db-4182-4cc8-b304-b7f8e18d388d" />
 
 
-> **Prototipo Generativo con Control de Estructura, *Tool Calling* y Validación de Fuentes**  
+> **Prototipo Generativo con Control de Estructura, *Tool Calling*, Validación de Fuentes, Búsqueda Semántica y *Embeddings***  
 > 
 > Proyecto final desarrollado para el docente Rober Erick García para la asignatura Electiva VI, Periodo 2026-II, en la Institución Universitaria EAM.
 
@@ -22,14 +22,16 @@
 report-generator/
 ├── .obsidian/               # Configuración del vault de Obsidian
 ├── images/                  # Capturas de pantalla y evidencias de ejecución
-├── logs/                    # Bitácoras de clase en Markdown (C02, C03, C04)
+├── logs/                    # Bitácoras de clase en Markdown (C02, C03, C04, C06)
 │   ├── C02_2026-08-26_Tokens.md
 │   ├── C03_2026-09-08_PromptV1.md
-│   └── C04_2026-09-13_Herramientas.md
+│   ├── C04_2026-09-13_Herramientas.md
+│   └── C06_2026-10-05_Busqueda_Semantica.md
 ├── notebooks/               # Notebooks ejecutables en Google Colab
 │   ├── C02_Report_Generation_Tokens.ipynb
 │   ├── C03_Demo_Colab_Groq.ipynb
-│   └── C04_Herramientas.ipynb
+│   ├── C04_Herramientas.ipynb
+│   └── C06_Busqueda_Semantica.ipynb
 ├── presentations/               # Presentaciones finales
 │   ├── presentacion-corte1-juliofi.html
 │   └── presentacion-corte1-juliofi.pdf
@@ -53,6 +55,7 @@ Para resolver este problema, *Report Generator* opera como un asistente de solo 
 1. **Clasifica y valida solicitudes:** Parsea peticiones en lenguaje natural a esquemas JSON estrictos mediante Pydantic.
 2. **Consulta fuentes registradas:** Invoca herramientas de *Tool Calling* para validar la disponibilidad real de datos en un catálogo de fuentes (`DS-0000`).
 3. **Genera borradores auditables:** Redacta plantillas de informes señalando explícitamente cualquier vacío mediante las etiquetas `[DATO AUSENTE]` y `[DATO INCOMPLETO]`, sin inventar cifras ni asumir métricas no confirmadas.
+4. **Explora la búsqueda semántica (en desarrollo):** Recupera pasajes de un corpus de texto mediante *embeddings* y similitud coseno. Por ahora funciona de forma independiente y aún no está integrada al flujo de generación de borradores.
 
 ## Evolución del Proyecto por Sesiones
 
@@ -83,6 +86,15 @@ El proyecto ha evolucionado de forma incremental a través de los laboratorios a
 * **Segunda Barrera Pydantic:** Validación de argumentos (`ArgumentosFuente`) exigiendo el patrón `DS-0000` y comprobando que el código citado aparezca literalmente en la entrada del usuario.
 * **Algoritmo Determinista:** Reconocimiento de métricas con vocabulario cerrado, contraste entre métricas solicitadas vs. disponibles y redacción de borradores no verificados con advertencias explícitas de ausencia.
 
+### 4. Embeddings y Búsqueda Semántica (`Clase 6`)
+
+* **Notebook:** `notebooks/C06_Busqueda_Semantica.ipynb`
+* **Bitácora:** `logs/C06_2026-10-05_Busqueda_Semantica.md`
+* **Enfoque:** Seis pasajes ficticios (informe ejecutivo, técnico, resumen periódico, catálogo de fuentes, datos incompletos y alcance del servicio) se convierten en vectores con `paraphrase-multilingual-MiniLM-L12-v2`; las consultas se ordenan por similitud coseno (`K = 3`).
+* **Batería de pruebas:** Cinco casos con el pasaje esperado escrito antes de ejecutar (paráfrasis, coincidencia exacta, pregunta incompleta, dato que vive en la fuente y pregunta fuera de cobertura). En los cuatro casos con respuesta el pasaje esperado quedó primero.
+* **Hallazgo:** Siempre existe un "más cercano" aunque ningún pasaje responda (la pregunta fuera de cobertura devolvió P3 con 0.345), por lo que no se fijó un umbral automático y se exige leer el texto recuperado. Los datos que cambian (p. ej. la última actualización de `DS-1001`) siguen consultándose con `consultar_fuente_datos`.
+* **Alcance:** Solo recupera pasajes; no genera respuestas con ellos ni procesa documentos reales.
+
 ## Instrucciones de Ejecución y Reproducción
 
 Para ejecutar el proyecto y verificar los resultados de las entregas, siga las siguientes instrucciones:
@@ -110,7 +122,7 @@ Para ejecutar el proyecto y verificar los resultados de las entregas, siga las s
 
 #### C. Llamada de Herramientas e Integración Completa (`Clase 4`)
 
-&gt; **Punto de entrada principal para revisar el prototipo completo del Corte 1.**
+> **Punto de entrada principal para revisar el prototipo completo del Corte 1.**
 
 1. Abrir `notebooks/C04_Herramientas.ipynb` en Google Colab.
 2. Seleccionar la modalidad en la celda de configuración inicial:
@@ -120,15 +132,21 @@ Para ejecutar el proyecto y verificar los resultados de las entregas, siga las s
 4. **Reproducción de Pruebas:**
    * Ejecutar la **Sección 10** para correr la matriz de 11 casos de prueba (normales, ambiguos, incompletos, maliciosos, fuera de alcance y consultas de fuentes).
    * Ejecutar la **Sección 11** para verificar las pruebas negativas deterministas (rechazo de código no citado, fallos controlados y preservación del catálogo).
-5. **Exportación de Evidencias:** Ejecutar la **Sección 13** para generar el paquete comprimido `.zip` con esquemas, trazas y bitácora.
+1. **Exportación de Evidencias:** Ejecutar la **Sección 13** para generar el paquete comprimido `.zip` con esquemas, trazas y bitácora.
+
+#### D. Búsqueda Semántica (`Clase 6`)
+
+1. Abrir `notebooks/C06_Busqueda_Semantica.ipynb` en Google Colab. No requiere clave de API ni GPU; la primera ejecución descarga el modelo de embeddings.
+2. Ejecutar las celdas en orden (la sección 1 instala `sentence-transformers`).
+3. **Ingreso de una consulta nueva:** Ir a la **Sección 5**, modificar `CONSULTA` (y `K` si se desea) y ejecutar la **Sección 6** para ver el ranking.
+4. **Reproducción de Pruebas:** Ejecutar la **Sección 7** (preguntas con información insuficiente) y la **Sección 8** (batería de cinco casos con esperado y top-K).
 
 ## Tecnologías y Herramientas
 
 * **Lenguaje:** Python 3.10+
 * **Entornos de Ejecución:** Google Colab, Jupyter Notebook, Ollama (Local)
-* **Modelos de Lenguaje & APIs:** Groq API (`openai/gpt-oss-20b`), Ollama (`gemma4:e2b`)
-* **Validación de Datos & Esquemas:** Pydantic V2, JSON Schema (*Structured Outputs*)
-* **Análisis & Métricas:** Tiktoken, Pandas, Matplotlib
+* **Modelos de Lenguaje & APIs:** Groq API (`openai/gpt-oss-20b`), Ollama (`gemma4:e2b`), Sentence Transformers (`paraphrase-multilingual-MiniLM-L12-v2`)
+* **Análisis & Métricas:** Tiktoken, Pandas, Matplotlib, NumPy
 
 ## Arquitectura del Flujo de Procesamiento
 
@@ -150,6 +168,24 @@ Para ejecutar el proyecto y verificar los resultados de las entregas, siga las s
                            │
                            ▼
             [Borrador No Verificado con Etiquetas [DATO AUSENTE] / [DATO INCOMPLETO]]
+```
+
+### Módulo de Búsqueda Semántica (Clase 6, aún independiente del flujo anterior)
+
+```text
+[Consulta del usuario]
+        │
+        ▼
+[Embedding con el mismo modelo del corpus]
+        │
+        ▼
+[Similitud coseno contra los vectores del corpus]
+        │
+        ▼
+[Ranking top-K con identificador, puntaje y texto]
+        │
+        ▼
+[Lectura humana: ¿el pasaje alcanza para responder?]
 ```
 
 ## Criterios de Seguridad y Limitaciones

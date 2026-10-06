@@ -13,12 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "logs/C06_2026-10-05_Busqueda_Semantica.md",
+                "file": "README.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C06_2026-10-05_Busqueda_Semantica"
+              "title": "README"
             }
           },
           {
@@ -205,9 +205,9 @@
   },
   "active": "49cc3c8c868f50f1",
   "lastOpenFiles": [
+    "logs/C06_2026-10-05_Busqueda_Semantica.md",
     "Pasted image 20261005225918.png",
     "images/Pasted image 20261005225733.png",
-    "logs/C06_2026-10-05_Busqueda_Semantica.md",
     "images/Pasted image 20261005225658.png",
     "images/Pasted image 20261005225558.png",
     "images/Pasted image 20261005225617.png",
@@ -223,7 +223,6 @@
     "images/Pasted image 20260915184115.png",
     "images/Pasted image 20260915183928.png",
     "images/Pasted image 20260915183548.png",
-    "images/Pasted image 20260915183316.png",
     "prompts/SYSTEM_PROMPT_V2.md",
     "prompts/SYSTEM_PROMPT_V1.md",
     "logs/C04_2026-09-15_Herramientas.md",
