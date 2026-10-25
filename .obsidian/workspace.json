@@ -13,32 +13,12 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "README.md",
+                "file": "logs/C08_2026-10-11_RAG.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "README"
-            }
-          }
-        ]
-      },
-      {
-        "id": "100711d6f7cb90ab",
-        "type": "tabs",
-        "children": [
-          {
-            "id": "de4926efe339bdae",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "README.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "README"
+              "title": "C08_2026-10-11_RAG"
             }
           }
         ]
@@ -209,35 +189,39 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "7e21cc53af7a09b4",
+  "active": "c53db9bcbb8bdd8c",
   "lastOpenFiles": [
-    "README.md",
-    "README.md",
+    "notebooks/Clase_09_Evidencia_Evaluacion_RAG_ReportGenerator.zip",
+    "notebooks/C09_Evaluacion_RAG.ipynb",
+    "images/Pasted image 20261025150029.png",
+    "logs/C09_2026-10-23_Evaluacion_RAG.md",
+    "images/Pasted image 20261025150156.png",
+    "images/Pasted image 20261025150135.png",
+    "images/Pasted image 20261025150126.png",
+    "images/Pasted image 20261025150118.png",
+    "images/Pasted image 20261025150057.png",
+    "images/Pasted image 20261025150045.png",
+    "URL o hash.md",
     "logs/C08_2026-10-11_RAG.md",
+    "logs/C06_2026-10-05_Busqueda_Semantica.md",
+    "logs/C07_2026-10-07_Ingestion_Indice.md",
+    "README.md",
+    "README.md",
     "images/Pasted image 20261013171702.png",
     "images/Pasted image 20261013171655.png",
-    "logs/C07_2026-10-07_Ingestion_Indice.md",
     "images/Pasted image 20261013165541.png",
-    "images/Pasted image 20261013165426.png",
-    "images/Pasted image 20261013164555.png",
     "prompts/SYSTEM_PROMPT_V3.md",
     "prompts/SYSTEM_PROMPT_V2.md",
     "notebooks/Clase_08_Evidencia_RAG_ReportGenerator.json",
     "notebooks/Clase_08_Matriz_Pruebas_ReportGenerator.csv",
     "notebooks/C08_RAG.ipynb",
     "logs/C04_2026-09-13_Herramientas.md",
-    "logs/C06_2026-10-05_Busqueda_Semantica.md",
     "prompts/Untitled",
     "logs/C07_2026-10-07_Ingestion_Indice 1.md",
-    "images/Pasted image 20261007192957.png",
-    "images/Pasted image 20261007192930.png",
-    "images/Pasted image 20261007192913.png",
-    "images/Pasted image 20261007192847.png",
     "logs/Plantilla_Bitacora.md",
     "logs/C07_2026-10-07_.md",
     "notebooks/Clase_07_Indice_y_Corpus.zip",
     "notebooks/C07_Ingestion_Indice.ipynb",
-    "Pasted image 20261005225918.png",
     "notebooks/C06_Busqueda_Semantica.ipynb",
     "Guia_Entrega_Proyecto_y_Presentacion_Corte_1.md",
     "logs/C03_2026-09-08_PromptV1.md",
@@ -247,7 +231,6 @@
     "logs/C04_2026-09-15_Herramientas.md",
     "notebooks/C04_ReportGenerator_1789510735794980198.zip",
     "notebooks/C04_Herramientas.ipynb",
-    "notebooks/C04_Herramientas.zip",
     "notebooks/Como_crear_API_Groq_Colab.md",
     "Welcome.md"
   ]
