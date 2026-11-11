@@ -4,21 +4,21 @@
     "type": "split",
     "children": [
       {
-        "id": "3bc3a079840393e1",
+        "id": "040bd2297cb8bf9b",
         "type": "tabs",
         "children": [
           {
-            "id": "c53db9bcbb8bdd8c",
+            "id": "cb75aa64727a6acf",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "logs/C08_2026-10-11_RAG.md",
+                "file": "logs/C11_2026-11-06_RAG_Agente_MCP.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "C08_2026-10-11_RAG"
+              "title": "C11_2026-11-06_RAG_Agente_MCP"
             }
           }
         ]
@@ -189,12 +189,26 @@
       "obsidian-git:Open Git source control": false
     }
   },
-  "active": "c53db9bcbb8bdd8c",
+  "active": "cb75aa64727a6acf",
   "lastOpenFiles": [
+    "images/Pasted image 20261111181616.png",
+    "logs/C11_2026-11-06_RAG_Agente_MCP.md",
+    "images/Pasted image 20261111181512.png",
+    "logs/Plantilla_Bitacora.md",
+    "informe/informe_9750aede69f64c1883b3035d1420b3e0.md",
+    "informe_9750aede69f64c1883b3035d1420b3e0.md",
+    "notebooks/Clase_11_Evidencia_Integracion_ReportGenerator.json",
+    "informe/informe_e12db93a1665420598cc175a34a17e11.md",
+    "informe",
+    "logs/C11_2026-11-08_Agente_MCP.md",
+    "logs/C11_2026-11-10_Agente_MCP.md",
+    "logs/C09_2026-10-23_Evaluacion_RAG.md",
+    "README.md",
+    "logs/C11_AAAA-MM-DD_Agente_MCP.md",
+    "logs/C08_2026-10-11_RAG.md",
     "notebooks/Clase_09_Evidencia_Evaluacion_RAG_ReportGenerator.zip",
     "notebooks/C09_Evaluacion_RAG.ipynb",
     "images/Pasted image 20261025150029.png",
-    "logs/C09_2026-10-23_Evaluacion_RAG.md",
     "images/Pasted image 20261025150156.png",
     "images/Pasted image 20261025150135.png",
     "images/Pasted image 20261025150126.png",
@@ -202,14 +216,9 @@
     "images/Pasted image 20261025150057.png",
     "images/Pasted image 20261025150045.png",
     "URL o hash.md",
-    "logs/C08_2026-10-11_RAG.md",
     "logs/C06_2026-10-05_Busqueda_Semantica.md",
     "logs/C07_2026-10-07_Ingestion_Indice.md",
-    "README.md",
-    "README.md",
     "images/Pasted image 20261013171702.png",
-    "images/Pasted image 20261013171655.png",
-    "images/Pasted image 20261013165541.png",
     "prompts/SYSTEM_PROMPT_V3.md",
     "prompts/SYSTEM_PROMPT_V2.md",
     "notebooks/Clase_08_Evidencia_RAG_ReportGenerator.json",
@@ -218,20 +227,14 @@
     "logs/C04_2026-09-13_Herramientas.md",
     "prompts/Untitled",
     "logs/C07_2026-10-07_Ingestion_Indice 1.md",
-    "logs/Plantilla_Bitacora.md",
     "logs/C07_2026-10-07_.md",
     "notebooks/Clase_07_Indice_y_Corpus.zip",
     "notebooks/C07_Ingestion_Indice.ipynb",
-    "notebooks/C06_Busqueda_Semantica.ipynb",
     "Guia_Entrega_Proyecto_y_Presentacion_Corte_1.md",
     "logs/C03_2026-09-08_PromptV1.md",
     "logs/C02_2026-08-26_Tokens.md",
     "README.md.md",
     "prompts/SYSTEM_PROMPT_V1.md",
-    "logs/C04_2026-09-15_Herramientas.md",
-    "notebooks/C04_ReportGenerator_1789510735794980198.zip",
-    "notebooks/C04_Herramientas.ipynb",
-    "notebooks/Como_crear_API_Groq_Colab.md",
-    "Welcome.md"
+    "logs/C04_2026-09-15_Herramientas.md"
   ]
 }

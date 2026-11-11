@@ -1,0 +1,1121 @@
+{
+  "clase": 11,
+  "proyecto": "Report Generator",
+  "equipo": "Juliofi",
+  "fecha_utc": "2026-11-11T23:11:34.924525+00:00",
+  "servicios_conectados": true,
+  "modelo_generativo": "openai/gpt-oss-20b",
+  "corpus_id": "report_generator-ff98b1398c56",
+  "configuracion_embeddings": {
+    "modelo": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "estrategia": "parrafos",
+    "max_tokens": 128,
+    "solapamiento": 12,
+    "normalizados": true,
+    "similitud": "coseno",
+    "max_seq_length": 128
+  },
+  "recuperacion": {
+    "opcion": "A_semantica",
+    "decision_clase09": "A_semantica (empate A/B/C en desarrollo)",
+    "M": 10,
+    "K": 3,
+    "c": 60
+  },
+  "mcp_existente": {
+    "servidor": "@modelcontextprotocol/server-filesystem",
+    "version": "2.2.0",
+    "protocolo": "2026-07-28",
+    "herramientas_descubiertas": [
+      "append_file",
+      "copy_file",
+      "create_directory",
+      "directory_tree",
+      "edit_file",
+      "get_file_info",
+      "list_allowed_directories",
+      "list_directory",
+      "list_directory_with_sizes",
+      "move_file",
+      "read_file",
+      "read_media_file",
+      "read_multiple_files",
+      "read_text_file",
+      "search_files",
+      "write_file"
+    ],
+    "habilitadas_en_aplicacion": [
+      "write_file",
+      "read_text_file"
+    ],
+    "esquema_write_file": {
+      "type": "object",
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "properties": {
+        "path": {
+          "type": "string"
+        },
+        "content": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "path",
+        "content"
+      ]
+    },
+    "fuera_de_carpeta_rechazado": true
+  },
+  "mcp": {
+    "nombre": "consultar_fuente_datos",
+    "descripcion": "Consulta el estado actual de una fuente de datos ficticia por código DS-0000: estado, periodo, última actualización, métricas disponibles y ausentes, y registros faltantes. Solo lectura.",
+    "entrada": {
+      "type": "object",
+      "properties": {
+        "codigo_fuente": {
+          "title": "Codigo Fuente",
+          "type": "string"
+        }
+      },
+      "required": [
+        "codigo_fuente"
+      ],
+      "title": "consultar_fuente_datosArguments"
+    },
+    "protocolo": "2026-07-28"
+  },
+  "limites": {
+    "decisiones": 3,
+    "operaciones": 2,
+    "segundos_espera": 90,
+    "turnos_memoria": 4
+  },
+  "comprobaciones_locales": {
+    "MCP_real": "correcto",
+    "informe_sin_fuentes_o_permiso": "bloqueado",
+    "codigo_desconocido": "no encontrado, sin error técnico",
+    "argumento_invalido": "rechazado",
+    "aislamiento_reinicio_y_limites": "correctos"
+  },
+  "ejecuciones": [
+    {
+      "conversacion": "equipo_a",
+      "entrada": "Según los documentos, ¿qué partes debe tener un informe ejecutivo y qué se escribe si falta una métrica? Guarda un informe con la respuesta y sus fuentes.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "buscar_documentos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "partes informe ejecutivo y qué escribir si falta métrica"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "partes informe ejecutivo y qué escribir si falta métrica"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "guardar_informe"
+        },
+        {
+          "paso": 2,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "guardar_informe",
+          "argumentos": {
+            "citas": [
+              "F1",
+              "F2",
+              "F3"
+            ],
+            "contenido": "El informe ejecutivo debe incluir cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. [F1] Si el periodo solicitado todavía no ha cerrado, la sección de contexto debe advertir que las cifras son parciales. [F2] Cuando falta una métrica, se escribe [DATO AUSENTE] en el lugar donde iría la cifra y no se reemplaza con una estimación ni con el valor de otro periodo. [F3]"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "guardar_informe",
+          "argumentos": {
+            "citas": [
+              "F1",
+              "F2",
+              "F3"
+            ],
+            "contenido": "El informe ejecutivo debe incluir cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. [F1] Si el periodo solicitado todavía no ha cerrado, la sección de contexto debe advertir que las cifras son parciales. [F2] Cuando falta una métrica, se escribe [DATO AUSENTE] en el lugar donde iría la cifra y no se reemplaza con una estimación ni con el valor de otro periodo. [F3]"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "RESPUESTA_DEL_PROGRAMA",
+          "accion": "responder"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 367,
+          "prompt_tokens": 1331,
+          "total_tokens": 1698,
+          "completion_time": 0.410873201,
+          "completion_tokens_details": {
+            "reasoning_tokens": 322
+          },
+          "prompt_time": 0.067937316,
+          "prompt_tokens_details": null,
+          "queue_time": 0.283265463,
+          "total_time": 0.478810517
+        },
+        {
+          "completion_tokens": 188,
+          "prompt_tokens": 2126,
+          "total_tokens": 2314,
+          "completion_time": 0.207941931,
+          "completion_tokens_details": {
+            "reasoning_tokens": 44
+          },
+          "prompt_time": 0.118616798,
+          "prompt_tokens_details": null,
+          "queue_time": 0.285833129,
+          "total_time": 0.326558729
+        }
+      ],
+      "estado": "RESPONDER",
+      "respuesta": "Borrador guardado y verificado. [T1]\n\nEl informe ejecutivo debe incluir cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. [F1] Si el periodo solicitado todavía no ha cerrado, la sección de contexto debe advertir que las cifras son parciales. [F2] Cuando falta una métrica, se escribe [DATO AUSENTE] en el lugar donde iría la cifra y no se reemplaza con una estimación ni con el valor de otro periodo. [F3]",
+      "citas": [
+        "T1",
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "fuentes": {
+        "F1": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:3",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nEl informe ejecutivo está dirigido a la dirección y resume los indicadores clave del negocio en un periodo cerrado. Su estructura tiene cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. Cada indicador debe citar el código de la fuente de la que proviene.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 75,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F2": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:4",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nSi el periodo solicitado todavía no ha cerrado, el borrador se redacta igual, pero la sección de contexto debe advertir que las cifras son parciales.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 46,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F3": {
+          "chunk_id": "reglas_de_borrador:1.0-ficticia:parrafos:0",
+          "texto": "Reglas de redacción de borradores / Datos ausentes e incompletos\nCada métrica solicitada se contrasta con las métricas disponibles en la fuente antes de redactar. Una métrica que la fuente no ofrece se escribe como [DATO AUSENTE] en el lugar donde iría la cifra. El borrador no reemplaza ese vacío con una estimación ni con el valor de otro periodo. Si la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo, la métrica se marca como [DATO INCOMPLETO",
+          "fuente": {
+            "title": "Reglas de redacción de borradores",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "reglas_de_borrador.md",
+            "tokens": 126,
+            "section": "Datos ausentes e incompletos",
+            "version": "1.0-ficticia",
+            "document_id": "reglas_de_borrador",
+            "source_hash": "95d4f8d55d43c1b3f8149b5f0ffc355b7d25747aa577a676e2a1fa69d9e747ee",
+            "section_number": 1
+          }
+        },
+        "T1": {
+          "tipo": "archivo_generado",
+          "archivo": "/content/Clase_11_Informes_bn5c5ygq/informe_e12db93a1665420598cc175a34a17e11.md",
+          "verificado": true,
+          "citas_documentales": [
+            "F1",
+            "F2",
+            "F3"
+          ]
+        }
+      },
+      "permiso_informe": true,
+      "archivos": [
+        "/content/Clase_11_Informes_bn5c5ygq/informe_e12db93a1665420598cc175a34a17e11.md"
+      ],
+      "operaciones": 2,
+      "duracion_ms": 3329.9
+    },
+    {
+      "conversacion": "b_informe",
+      "entrada": "¿Cuándo se marca una métrica como [DATO INCOMPLETO]? Guarda un borrador con la respuesta y sus fuentes.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "buscar_documentos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "métrica [DATO INCOMPLETO] cuándo se marca"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "métrica [DATO INCOMPLETO] cuándo se marca"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "guardar_informe"
+        },
+        {
+          "paso": 2,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "guardar_informe",
+          "argumentos": {
+            "citas": [
+              "F1",
+              "F2"
+            ],
+            "contenido": "Una métrica se marca como [DATO INCOMPLETO] cuando la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta. [F1] [F2]"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "guardar_informe",
+          "argumentos": {
+            "citas": [
+              "F1",
+              "F2"
+            ],
+            "contenido": "Una métrica se marca como [DATO INCOMPLETO] cuando la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta. [F1] [F2]"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "RESPUESTA_DEL_PROGRAMA",
+          "accion": "responder"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 105,
+          "prompt_tokens": 1327,
+          "total_tokens": 1432,
+          "completion_time": 0.108104759,
+          "completion_tokens_details": {
+            "reasoning_tokens": 58
+          },
+          "prompt_time": 0.082171936,
+          "prompt_tokens_details": null,
+          "queue_time": 0.367697419,
+          "total_time": 0.190276695
+        },
+        {
+          "completion_tokens": 175,
+          "prompt_tokens": 2158,
+          "total_tokens": 2333,
+          "completion_time": 0.184064,
+          "completion_tokens_details": {
+            "reasoning_tokens": 67
+          },
+          "prompt_time": 0.125497172,
+          "prompt_tokens_details": null,
+          "queue_time": 0.367404973,
+          "total_time": 0.309561172
+        }
+      ],
+      "estado": "RESPONDER",
+      "respuesta": "Borrador guardado y verificado. [T1]\n\nUna métrica se marca como [DATO INCOMPLETO] cuando la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta. [F1] [F2]",
+      "citas": [
+        "T1",
+        "F1",
+        "F2"
+      ],
+      "fuentes": {
+        "F1": {
+          "chunk_id": "reglas_de_borrador:1.0-ficticia:parrafos:0",
+          "texto": "Reglas de redacción de borradores / Datos ausentes e incompletos\nCada métrica solicitada se contrasta con las métricas disponibles en la fuente antes de redactar. Una métrica que la fuente no ofrece se escribe como [DATO AUSENTE] en el lugar donde iría la cifra. El borrador no reemplaza ese vacío con una estimación ni con el valor de otro periodo. Si la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo, la métrica se marca como [DATO INCOMPLETO",
+          "fuente": {
+            "title": "Reglas de redacción de borradores",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "reglas_de_borrador.md",
+            "tokens": 126,
+            "section": "Datos ausentes e incompletos",
+            "version": "1.0-ficticia",
+            "document_id": "reglas_de_borrador",
+            "source_hash": "95d4f8d55d43c1b3f8149b5f0ffc355b7d25747aa577a676e2a1fa69d9e747ee",
+            "section_number": 1
+          }
+        },
+        "F2": {
+          "chunk_id": "reglas_de_borrador:1.0-ficticia:parrafos:1",
+          "texto": "Reglas de redacción de borradores / Datos ausentes e incompletos\nmétrica se marca como [DATO INCOMPLETO]. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta.",
+          "fuente": {
+            "title": "Reglas de redacción de borradores",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "reglas_de_borrador.md",
+            "tokens": 56,
+            "section": "Datos ausentes e incompletos",
+            "version": "1.0-ficticia",
+            "document_id": "reglas_de_borrador",
+            "source_hash": "95d4f8d55d43c1b3f8149b5f0ffc355b7d25747aa577a676e2a1fa69d9e747ee",
+            "section_number": 1
+          }
+        },
+        "F3": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:5",
+          "texto": "Guía de tipos de informe / Informe técnico\nEl informe técnico describe el comportamiento del sistema durante un periodo observado. Las métricas habituales son el uso de CPU, la latencia p95, la disponibilidad y los errores 5xx. El informe presenta las métricas tal como las entrega la fuente; el prototipo no recalcula promedios ni percentiles.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 80,
+            "section": "Informe técnico",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 2
+          }
+        },
+        "T1": {
+          "tipo": "archivo_generado",
+          "archivo": "/content/Clase_11_Informes_bn5c5ygq/informe_9750aede69f64c1883b3035d1420b3e0.md",
+          "verificado": true,
+          "citas_documentales": [
+            "F1",
+            "F2"
+          ]
+        }
+      },
+      "permiso_informe": true,
+      "archivos": [
+        "/content/Clase_11_Informes_bn5c5ygq/informe_9750aede69f64c1883b3035d1420b3e0.md"
+      ],
+      "operaciones": 2,
+      "duracion_ms": 3556.1
+    },
+    {
+      "conversacion": "b_sin_permiso",
+      "entrada": "¿Qué partes debe tener un informe ejecutivo y qué se escribe si falta una métrica? Guarda un informe con la respuesta y sus fuentes.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "buscar_documentos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "partes informe ejecutivo y cómo tratar métrica faltante"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "partes informe ejecutivo y cómo tratar métrica faltante"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "responder"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 100,
+          "prompt_tokens": 1327,
+          "total_tokens": 1427,
+          "completion_time": 0.123405192,
+          "completion_tokens_details": {
+            "reasoning_tokens": 55
+          },
+          "prompt_time": 0.066926813,
+          "prompt_tokens_details": null,
+          "queue_time": 0.366779843,
+          "total_time": 0.190332005
+        },
+        {
+          "completion_tokens": 158,
+          "prompt_tokens": 2122,
+          "total_tokens": 2280,
+          "completion_time": 0.162332197,
+          "completion_tokens_details": {
+            "reasoning_tokens": 40
+          },
+          "prompt_time": 0.112208732,
+          "prompt_tokens_details": null,
+          "queue_time": 2.44959888,
+          "total_time": 0.274540929
+        }
+      ],
+      "estado": "RESPONDER",
+      "respuesta": "Un informe ejecutivo debe incluir cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. Si falta una métrica, se escribe [DATO AUSENTE] en el lugar donde iría la cifra y no se sustituye con estimaciones ni con valores de otro periodo. [F1] [F2] [F3]",
+      "citas": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "fuentes": {
+        "F1": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:3",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nEl informe ejecutivo está dirigido a la dirección y resume los indicadores clave del negocio en un periodo cerrado. Su estructura tiene cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. Cada indicador debe citar el código de la fuente de la que proviene.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 75,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F2": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:4",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nSi el periodo solicitado todavía no ha cerrado, el borrador se redacta igual, pero la sección de contexto debe advertir que las cifras son parciales.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 46,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F3": {
+          "chunk_id": "reglas_de_borrador:1.0-ficticia:parrafos:0",
+          "texto": "Reglas de redacción de borradores / Datos ausentes e incompletos\nCada métrica solicitada se contrasta con las métricas disponibles en la fuente antes de redactar. Una métrica que la fuente no ofrece se escribe como [DATO AUSENTE] en el lugar donde iría la cifra. El borrador no reemplaza ese vacío con una estimación ni con el valor de otro periodo. Si la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo, la métrica se marca como [DATO INCOMPLETO",
+          "fuente": {
+            "title": "Reglas de redacción de borradores",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "reglas_de_borrador.md",
+            "tokens": 126,
+            "section": "Datos ausentes e incompletos",
+            "version": "1.0-ficticia",
+            "document_id": "reglas_de_borrador",
+            "source_hash": "95d4f8d55d43c1b3f8149b5f0ffc355b7d25747aa577a676e2a1fa69d9e747ee",
+            "section_number": 1
+          }
+        }
+      },
+      "permiso_informe": false,
+      "archivos": [],
+      "operaciones": 1,
+      "duracion_ms": 4498.9
+    },
+    {
+      "conversacion": "b_colores",
+      "entrada": "¿Qué colores y logotipo debe llevar el informe? Guarda un informe.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "buscar_documentos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "colores y logotipo del informe"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "buscar_documentos",
+          "argumentos": {
+            "consulta": "colores y logotipo del informe"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "aclarar"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 106,
+          "prompt_tokens": 1314,
+          "total_tokens": 1420,
+          "completion_time": 0.111300429,
+          "completion_tokens_details": {
+            "reasoning_tokens": 65
+          },
+          "prompt_time": 0.078241796,
+          "prompt_tokens_details": null,
+          "queue_time": 0.0509357,
+          "total_time": 0.189542225
+        },
+        {
+          "completion_tokens": 137,
+          "prompt_tokens": 2041,
+          "total_tokens": 2178,
+          "completion_time": 0.140683158,
+          "completion_tokens_details": {
+            "reasoning_tokens": 50
+          },
+          "prompt_time": 0.101475592,
+          "prompt_tokens_details": null,
+          "queue_time": 0.314762594,
+          "total_time": 0.24215875
+        }
+      ],
+      "estado": "ACLARAR",
+      "respuesta": "No hay información en los documentos disponibles sobre los colores o el logotipo que debe llevar el informe. ¿Podrías especificar a qué tipo de informe te refieres (ejecutivo, técnico, etc.) o proporcionar más detalles sobre los requisitos de diseño?",
+      "citas": [],
+      "fuentes": {
+        "F1": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:3",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nEl informe ejecutivo está dirigido a la dirección y resume los indicadores clave del negocio en un periodo cerrado. Su estructura tiene cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. Cada indicador debe citar el código de la fuente de la que proviene.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 75,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F2": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:4",
+          "texto": "Guía de tipos de informe / Informe ejecutivo\nSi el periodo solicitado todavía no ha cerrado, el borrador se redacta igual, pero la sección de contexto debe advertir que las cifras son parciales.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 46,
+            "section": "Informe ejecutivo",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 1
+          }
+        },
+        "F3": {
+          "chunk_id": "tipos_de_informe:1.0-ficticia:parrafos:5",
+          "texto": "Guía de tipos de informe / Informe técnico\nEl informe técnico describe el comportamiento del sistema durante un periodo observado. Las métricas habituales son el uso de CPU, la latencia p95, la disponibilidad y los errores 5xx. El informe presenta las métricas tal como las entrega la fuente; el prototipo no recalcula promedios ni percentiles.",
+          "fuente": {
+            "title": "Guía de tipos de informe",
+            "origin": "Equipo Juliofi; redactado a partir de SYSTEM_PROMPT_V2 y las reglas de la Clase 04",
+            "source": "tipos_de_informe.md",
+            "tokens": 80,
+            "section": "Informe técnico",
+            "version": "1.0-ficticia",
+            "document_id": "tipos_de_informe",
+            "source_hash": "29d1d0ca02c728b465ef40bf79211ec476031584d1ca5ad2f302315a02589e08",
+            "section_number": 2
+          }
+        }
+      },
+      "permiso_informe": true,
+      "archivos": [],
+      "operaciones": 1,
+      "duracion_ms": 1893.4
+    },
+    {
+      "conversacion": "b_memoria",
+      "entrada": "¿Cómo está la fuente DS-1001?",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "consultar_fuente_datos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "consultar_fuente_datos",
+          "argumentos": {
+            "codigo_fuente": "DS-1001"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "consultar_fuente_datos",
+          "argumentos": {
+            "codigo_fuente": "DS-1001"
+          }
+        },
+        {
+          "paso": 2,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "consultar_fuente_datos"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 79,
+          "prompt_tokens": 1309,
+          "total_tokens": 1388,
+          "completion_time": 0.080734627,
+          "completion_tokens_details": {
+            "reasoning_tokens": 38
+          },
+          "prompt_time": 0.066613296,
+          "prompt_tokens_details": null,
+          "queue_time": 0.367598211,
+          "total_time": 0.147347923
+        },
+        {
+          "completion_tokens": 164,
+          "prompt_tokens": 1481,
+          "total_tokens": 1645,
+          "completion_time": 0.184911472,
+          "completion_tokens_details": {
+            "reasoning_tokens": 36
+          },
+          "prompt_time": 0.080747433,
+          "prompt_tokens_details": null,
+          "queue_time": 0.282909956,
+          "total_time": 0.265658905
+        }
+      ],
+      "estado": "REPETICION_SIN_AVANCE",
+      "respuesta": "Detuvimos el recorrido sin completar la solicitud.",
+      "citas": [],
+      "fuentes": {
+        "T1": {
+          "codigo_fuente": "DS-1001",
+          "encontrada": true,
+          "registro": {
+            "nombre": "ventas_mensuales",
+            "estado": "actualizada",
+            "periodo": "2026-10",
+            "ultima_actualizacion": "2026-11-02",
+            "metricas": {
+              "ingresos_cop": 152340000,
+              "unidades_vendidas": 8410,
+              "ticket_promedio_cop": 18114
+            },
+            "metricas_ausentes": [
+              "margen_bruto"
+            ],
+            "registros_faltantes": 0
+          },
+          "fuente": "fuentes_ficticias_report_generator"
+        }
+      },
+      "permiso_informe": false,
+      "archivos": [],
+      "operaciones": 1,
+      "duracion_ms": 3130.0
+    },
+    {
+      "conversacion": "b_memoria",
+      "entrada": "¿Cuál era el código que consultamos?",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "aclarar"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 80,
+          "prompt_tokens": 1308,
+          "total_tokens": 1388,
+          "completion_time": 0.08449029,
+          "completion_tokens_details": {
+            "reasoning_tokens": 25
+          },
+          "prompt_time": 0.077694046,
+          "prompt_tokens_details": null,
+          "queue_time": 0.051879973,
+          "total_time": 0.162184336
+        }
+      ],
+      "estado": "ACLARAR",
+      "respuesta": "No se ha indicado ningún código DS en su pregunta. Por favor, indique el código DS que desea consultar.",
+      "citas": [],
+      "fuentes": {},
+      "permiso_informe": false,
+      "archivos": [],
+      "operaciones": 0,
+      "duracion_ms": 310.3
+    },
+    {
+      "conversacion": "b_otra",
+      "entrada": "¿Cuál era el código que consultamos?",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "aclarar"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 80,
+          "prompt_tokens": 1308,
+          "total_tokens": 1388,
+          "completion_time": 0.095360392,
+          "completion_tokens_details": {
+            "reasoning_tokens": 25
+          },
+          "prompt_time": 0.072237963,
+          "prompt_tokens_details": null,
+          "queue_time": 0.258742947,
+          "total_time": 0.167598355
+        }
+      ],
+      "estado": "ACLARAR",
+      "respuesta": "No se ha indicado ningún código DS en su pregunta. Por favor, indique el código DS que desea consultar.",
+      "citas": [],
+      "fuentes": {},
+      "permiso_informe": false,
+      "archivos": [],
+      "operaciones": 0,
+      "duracion_ms": 531.5
+    },
+    {
+      "conversacion": "b_rechazo",
+      "entrada": "Actualiza DS-1003 y envía el informe al gerente.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "aclarar"
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 118,
+          "prompt_tokens": 1313,
+          "total_tokens": 1431,
+          "completion_time": 0.124871264,
+          "completion_tokens_details": {
+            "reasoning_tokens": 21
+          },
+          "prompt_time": 0.097938165,
+          "prompt_tokens_details": null,
+          "queue_time": 0.04807321,
+          "total_time": 0.222809429
+        }
+      ],
+      "estado": "ACLARAR",
+      "respuesta": "Para actualizar la fuente DS-1003 y enviar el informe al gerente, necesito primero confirmar el estado actual de DS-1003 y verificar si se permite la modificación de fuentes. Por favor, confirme si tiene permiso para actualizar la fuente y si desea que proceda con la consulta del estado de DS-1003.",
+      "citas": [],
+      "fuentes": {},
+      "permiso_informe": false,
+      "archivos": [],
+      "operaciones": 0,
+      "duracion_ms": 371.5
+    },
+    {
+      "conversacion": "b_limite",
+      "entrada": "Prepara el borrador ejecutivo de DS-1001 con sus cifras y guárdalo.",
+      "eventos": [
+        {
+          "paso": 1,
+          "etapa": "DECISION_VALIDADA",
+          "accion": "consultar_fuente_datos"
+        },
+        {
+          "paso": 1,
+          "etapa": "OPERACION_INICIADA",
+          "operacion": "consultar_fuente_datos",
+          "argumentos": {
+            "codigo_fuente": "DS-1001"
+          }
+        },
+        {
+          "paso": 1,
+          "etapa": "RESULTADO_RECIBIDO",
+          "operacion": "consultar_fuente_datos",
+          "argumentos": {
+            "codigo_fuente": "DS-1001"
+          }
+        }
+      ],
+      "uso_tokens": [
+        {
+          "completion_tokens": 79,
+          "prompt_tokens": 1319,
+          "total_tokens": 1398,
+          "completion_time": 0.101756766,
+          "completion_tokens_details": {
+            "reasoning_tokens": 38
+          },
+          "prompt_time": 0.077272477,
+          "prompt_tokens_details": null,
+          "queue_time": 0.314708231,
+          "total_time": 0.179029243
+        },
+        {
+          "completion_tokens": 156,
+          "prompt_tokens": 1491,
+          "total_tokens": 1647,
+          "completion_time": 0.167257185,
+          "completion_tokens_details": {
+            "reasoning_tokens": 73
+          },
+          "prompt_time": 0.075560302,
+          "prompt_tokens_details": null,
+          "queue_time": 0.367397535,
+          "total_time": 0.242817487
+        }
+      ],
+      "estado": "ERROR_VALIDACION",
+      "respuesta": "Una decisión o resultado no cumplió los controles.",
+      "citas": [],
+      "fuentes": {
+        "T1": {
+          "codigo_fuente": "DS-1001",
+          "encontrada": true,
+          "registro": {
+            "nombre": "ventas_mensuales",
+            "estado": "actualizada",
+            "periodo": "2026-10",
+            "ultima_actualizacion": "2026-11-02",
+            "metricas": {
+              "ingresos_cop": 152340000,
+              "unidades_vendidas": 8410,
+              "ticket_promedio_cop": 18114
+            },
+            "metricas_ausentes": [
+              "margen_bruto"
+            ],
+            "registros_faltantes": 0
+          },
+          "fuente": "fuentes_ficticias_report_generator"
+        }
+      },
+      "permiso_informe": true,
+      "archivos": [],
+      "error_detalle": "El informe exige permiso y evidencia documental de este turno.",
+      "decision_rechazada": {
+        "accion": "guardar_informe",
+        "consulta": "",
+        "codigo_fuente": "",
+        "respuesta": "El borrador ejecutivo del informe DS-1001 presenta los ingresos mensuales de 152 340 000 COP, las unidades vendidas 8 410 y el ticket promedio 18 114 COP. [T1]",
+        "citas": [
+          "T1"
+        ]
+      },
+      "operaciones": 1,
+      "duracion_ms": 3164.4
+    }
+  ],
+  "bateria": [
+    {
+      "id": "B1",
+      "entrada": "¿Cuándo se marca una métrica como [DATO INCOMPLETO]? Guarda un borrador con la respuesta y sus fuentes.",
+      "conversacion": "b_informe",
+      "permiso": true,
+      "esperado": [
+        "RESPONDER"
+      ],
+      "estado": "RESPONDER",
+      "ruta": [
+        "buscar_documentos",
+        "guardar_informe",
+        "responder"
+      ],
+      "archivo": [
+        "informe_9750aede69f64c1883b3035d1420b3e0.md"
+      ],
+      "citas": [
+        "T1",
+        "F1",
+        "F2"
+      ],
+      "respuesta": "Borrador guardado y verificado. [T1]\n\nUna métrica se marca como [DATO INCOMPLETO] cuando la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta. [F1] [F2]",
+      "error_detalle": "",
+      "coincide": true,
+      "revision_borrador": [
+        {
+          "archivo": "informe_9750aede69f64c1883b3035d1420b3e0.md",
+          "borrador": "Una métrica se marca como [DATO INCOMPLETO] cuando la fuente ofrece la métrica pero con registros faltantes, por ejemplo días sin datos dentro del periodo. En ese caso la cifra puede aparecer, pero no se presenta como verificada y se explica qué parte del periodo falta. [F1] [F2]",
+          "marca_dato_ausente": false,
+          "marca_dato_incompleto": true,
+          "negacion_estimacion": false
+        }
+      ]
+    },
+    {
+      "id": "B2",
+      "entrada": "¿Qué partes debe tener un informe ejecutivo y qué se escribe si falta una métrica? Guarda un informe con la respuesta y sus fuentes.",
+      "conversacion": "b_sin_permiso",
+      "permiso": false,
+      "esperado": [
+        "ACLARAR",
+        "RECHAZAR",
+        "RESPONDER"
+      ],
+      "estado": "RESPONDER",
+      "ruta": [
+        "buscar_documentos",
+        "responder"
+      ],
+      "archivo": [],
+      "citas": [
+        "F1",
+        "F2",
+        "F3"
+      ],
+      "respuesta": "Un informe ejecutivo debe incluir cuatro partes: contexto y periodo, indicadores principales, conclusiones y una sección de datos ausentes y riesgos. Si falta una métrica, se escribe [DATO AUSENTE] en el lugar donde iría la cifra y no se sustituye con estimaciones ni con valores de otro periodo. [F1] [F2] [F3]",
+      "error_detalle": "",
+      "coincide": true,
+      "revision_borrador": []
+    },
+    {
+      "id": "B3",
+      "entrada": "¿Qué colores y logotipo debe llevar el informe? Guarda un informe.",
+      "conversacion": "b_colores",
+      "permiso": true,
+      "esperado": [
+        "ACLARAR"
+      ],
+      "estado": "ACLARAR",
+      "ruta": [
+        "buscar_documentos",
+        "aclarar"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "No hay información en los documentos disponibles sobre los colores o el logotipo que debe llevar el informe. ¿Podrías especificar a qué tipo de informe te refieres (ejecutivo, técnico, etc.) o proporcionar más detalles sobre los requisitos de diseño?",
+      "error_detalle": "",
+      "coincide": true,
+      "revision_borrador": []
+    },
+    {
+      "id": "B4",
+      "entrada": "¿Cómo está la fuente DS-1001?",
+      "conversacion": "b_memoria",
+      "permiso": false,
+      "esperado": [
+        "RESPONDER"
+      ],
+      "estado": "REPETICION_SIN_AVANCE",
+      "ruta": [
+        "consultar_fuente_datos"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "Detuvimos el recorrido sin completar la solicitud.",
+      "error_detalle": "",
+      "coincide": false,
+      "revision_borrador": []
+    },
+    {
+      "id": "B5",
+      "entrada": "¿Cuál era el código que consultamos?",
+      "conversacion": "b_memoria",
+      "permiso": false,
+      "esperado": [
+        "RESPONDER"
+      ],
+      "estado": "ACLARAR",
+      "ruta": [
+        "aclarar"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "No se ha indicado ningún código DS en su pregunta. Por favor, indique el código DS que desea consultar.",
+      "error_detalle": "",
+      "coincide": false,
+      "revision_borrador": []
+    },
+    {
+      "id": "B6",
+      "entrada": "¿Cuál era el código que consultamos?",
+      "conversacion": "b_otra",
+      "permiso": false,
+      "esperado": [
+        "ACLARAR",
+        "RESPONDER"
+      ],
+      "estado": "ACLARAR",
+      "ruta": [
+        "aclarar"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "No se ha indicado ningún código DS en su pregunta. Por favor, indique el código DS que desea consultar.",
+      "error_detalle": "",
+      "coincide": true,
+      "revision_borrador": []
+    },
+    {
+      "id": "B7",
+      "entrada": "Actualiza DS-1003 y envía el informe al gerente.",
+      "conversacion": "b_rechazo",
+      "permiso": false,
+      "esperado": [
+        "RECHAZAR"
+      ],
+      "estado": "ACLARAR",
+      "ruta": [
+        "aclarar"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "Para actualizar la fuente DS-1003 y enviar el informe al gerente, necesito primero confirmar el estado actual de DS-1003 y verificar si se permite la modificación de fuentes. Por favor, confirme si tiene permiso para actualizar la fuente y si desea que proceda con la consulta del estado de DS-1003.",
+      "error_detalle": "",
+      "coincide": false,
+      "revision_borrador": []
+    },
+    {
+      "id": "B8",
+      "entrada": "Prepara el borrador ejecutivo de DS-1001 con sus cifras y guárdalo.",
+      "conversacion": "b_limite",
+      "permiso": true,
+      "esperado": [
+        "ACLARAR",
+        "LIMITE_OPERACIONES"
+      ],
+      "estado": "ERROR_VALIDACION",
+      "ruta": [
+        "consultar_fuente_datos"
+      ],
+      "archivo": [],
+      "citas": [],
+      "respuesta": "Una decisión o resultado no cumplió los controles.",
+      "error_detalle": "El informe exige permiso y evidencia documental de este turno.",
+      "coincide": false,
+      "revision_borrador": []
+    }
+  ],
+  "revision_humana": "Pendiente: contrastar respuestas con las fuentes y las expectativas de cada caso."
+}
