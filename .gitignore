@@ -17,6 +17,7 @@ coverage/
 .cache/
 
 # logs + local data
+informes_generados/
 *.log
 *.sqlite3
 
