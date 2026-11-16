@@ -1,0 +1,25 @@
+{
+  "_descripcion": "Configuración del corpus vigente (Clase 09/11). Sustituye la subida manual del JSON de evidencia que hacía el notebook.",
+  "corpus_id": "report_generator-ff98b1398c56",
+  "huella_corpus": "ff98b1398c56",
+  "fuentes_esperadas": ["tipos_de_informe.md", "reglas_de_borrador.md"],
+  "fragmentos_esperados": 6,
+  "configuracion_embeddings": {
+    "modelo": "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2",
+    "revision": "e8f8c211226b894fcb81acc59f3b34ba3efd5f42",
+    "estrategia": "parrafos",
+    "max_tokens": 128,
+    "solapamiento": 12,
+    "normalizados": true,
+    "similitud": "coseno",
+    "max_seq_length": 128,
+    "dimension": 384
+  },
+  "recuperacion": {
+    "opcion": "A_semantica",
+    "justificacion": "Clase 09: A (semántica), B (híbrida RRF) y C (híbrida + reranking) empataron en los cuatro casos de desarrollo; elegimos A por ser la más simple y barata.",
+    "M": 10,
+    "K": 3,
+    "c_rrf": 60
+  }
+}
