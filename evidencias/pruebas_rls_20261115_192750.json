@@ -1,0 +1,67 @@
+{
+  "fecha_utc": "2026-11-16T00:27:50.814871+00:00",
+  "usuarios": [
+    "ca***@gmail.com",
+    "ro***@eam.edu.co"
+  ],
+  "conversaciones_prueba": [
+    "7eca7cd2-83c9-4271-8fb2-672e4d692566",
+    "cc6bb335-ac6f-4297-8683-5c866501d3bd"
+  ],
+  "resultados": [
+    {
+      "caso": "Dos identidades distintas",
+      "esperado": "UUID A ≠ UUID B",
+      "observado": "distintos",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "A guarda en dos conversaciones",
+      "esperado": "2 mensajes por conversación",
+      "observado": "2 y 2",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "A recupera tras nueva sesión",
+      "esperado": "ambas conversaciones y sus mensajes en orden",
+      "observado": "2 conversaciones, roles ['user', 'assistant']",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "B lee conversación de A por UUID",
+      "esperado": "0 filas",
+      "observado": "0 filas",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "B lee mensajes de A por UUID",
+      "esperado": "0 filas",
+      "observado": "0 filas",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "B inserta mensaje en conversación de A",
+      "esperado": "rechazado por RLS",
+      "observado": "APIError",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "B crea conversación a nombre de A",
+      "esperado": "rechazado por RLS",
+      "observado": "APIError",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "almacenamiento.py de B abre conversación de A",
+      "esperado": "AccesoDenegado",
+      "observado": "AccesoDenegado",
+      "estado": "APROBADO"
+    },
+    {
+      "caso": "Conversación de A intacta",
+      "esperado": "2 mensajes",
+      "observado": "2 mensajes",
+      "estado": "APROBADO"
+    }
+  ]
+}
