@@ -1,406 +1,228 @@
-> ⚠️ **ESTE PROYECTO ESTÁ EN DESARROLLO Y SU CONTENIDO/README SE ACTUALIZARÁ DE MANERA PERIÓDICA**
- 
----
-# Report Generator (Generador de Informes con IA)
+# Report Generator - Equipo Juliofi
 
 <img alt="ollama-tool" src="https://github.com/user-attachments/assets/7f8a29db-4182-4cc8-b304-b7f8e18d388d" />
 
+Asistente web que ayuda a redactar **borradores de informe** a partir de dos tipos de evidencia: las reglas documentadas del equipo (RAG sobre Supabase) y el estado de fuentes de datos (consultado por MCP). Proyecto semestral de *Inteligencia Artificial Generativa y Sistemas Inteligentes*, EAM 2026-II.
 
-> **Prototipo Generativo con Control de Estructura, *Tool Calling*, Validación de Fuentes, Búsqueda Semántica, *Embeddings*, Fragmentación, Indexación, RAG, Evaluación de la Recuperación y Agente con MCP**  
-> 
-> Proyecto final desarrollado para el docente Rober Erick García para la asignatura Electiva VI, Periodo 2026-II, en la Institución Universitaria EAM.
+> **Enlaces rápidos:** [Bitácora unificada](BITACORA_PROYECTO.md) - [Presentación](app/presentacion_proyecto.html) - [Evidencias](evidencias/)
 
-## Equipo de Trabajo (Juliofi~)
+## Problema, usuarios y alcance
 
-* **Juliana Marín Vélez:** Elaboración y ejecución de notebooks.
-* **Sophie Rosero Muriel:** Soporte técnico en notebooks, verificación de pruebas y registro continuo en bitácoras.
+Quien prepara informes periódicos (ejecutivo, técnico) debe combinar reglas de redacción con datos que a veces llegan incompletos, desactualizados o sin alguna métrica. Report Generator responde preguntas sobre esas reglas citando el fragmento exacto, consulta el estado de una fuente y, con permiso explícito, guarda un borrador con sus fuentes para que una persona lo revise.
 
----
-## Estructura del Repositorio
+- **Usuarios:** analistas que redactan informes y revisores que los aprueban.
+- **Resultado:** respuesta con citas `[F#]` a los documentos, `[T#]` a resultados de herramientas, y opcionalmente un archivo `.md` de borrador verificado.
+- **Fuera de alcance:** modificar fuentes o documentos, enviar informes, aprobar, estimar cifras ausentes. El agente rechaza esas solicitudes y no existe ninguna herramienta que pueda ejecutarlas.
+- **Revisión humana:** todo borrador es un insumo para revisión; las marcas `[DATO AUSENTE]` y `[DATO INCOMPLETO]` nunca se sustituyen por estimaciones.
+- **Datos de la demostración:** corpus propio y ficticio (`tipos_de_informe.md`, `reglas_de_borrador.md`, versión `1.0-ficticia`, 6 fragmentos) y tres fuentes ficticias `DS-1001`, `DS-1002`, `DS-1003`. No corresponden a ninguna empresa ni sistema real.
 
-```text
-report-generator/
-├── .obsidian/               # Configuración del vault de Obsidian
-├── images/                  # Capturas de pantalla y evidencias de ejecución
-├── logs/                    # Bitácoras de clase en Markdown (C02, C03, C04, C06, C07, C08, C09, C11)
-│   ├── C02_2026-08-26_Tokens.md
-│   ├── C03_2026-09-08_PromptV1.md
-│   ├── C04_2026-09-13_Herramientas.md
-│   ├── C06_2026-10-05_Busqueda_Semantica.md
-│   ├── C07_2026-10-07_Ingestion_Indice.md
-│   ├── C08_2026-10-11_RAG.md
-│   ├── C09_2026-10-23_Evaluacion_RAG.md
-│   ├── C11_AAAA-MM-DD_Agente_MCP.md
-│   └── Plantilla_Bitacora.md
-├── notebooks/               # Notebooks ejecutables en Google Colab y sus evidencias
-│   ├── C02_Report_Generation_Tokens.ipynb
-│   ├── C03_Demo_Colab_Groq.ipynb
-│   ├── C04_Herramientas.ipynb
-│   ├── C06_Busqueda_Semantica.ipynb
-│   ├── C07_Ingestion_Indice.ipynb
-│   ├── C08_RAG.ipynb
-│   ├── C09_Evaluacion_RAG.ipynb
-│   ├── C11_RAG_Agente_MCP_ReportGenerator.ipynb
-│   ├── Clase_07_Indice_y_Corpus.zip
-│   ├── Clase_08_Matriz_Pruebas_ReportGenerator.csv
-│   ├── Clase_08_Evidencia_RAG_ReportGenerator.json
-│   ├── Clase_09_Evidencia_Evaluacion_RAG_ReportGenerator.zip
-│   └── Clase_11_Evidencia_Integracion_ReportGenerator.json
-├── presentations/           # Presentaciones finales
-│   ├── presentacion-corte1-juliofi.html
-│   └── presentacion-corte1-juliofi.pdf
-└── prompts/                 # Especificaciones y versiones del prompt del sistema
-    ├── SYSTEM_PROMPT_V1
-    ├── SYSTEM_PROMPT_V2
-    └── SYSTEM_PROMPT_V3
-```
-
-## Descripción del Proyecto
-
-*Report Generator* es un sistema inteligente diseñado para automatizar la construcción de borradores de informes empresariales (ejecutivos, técnicos, resúmenes periódicos y generales) garantizando rigor factual, trazabilidad y control estricto sobre los datos.
-
-### El Problema
-
-En el entorno corporativo, los informes internos suelen elaborarse manualmente consolidando métricas de diversas fuentes. El riesgo más crítico no radica en la redacción, sino en publicar un informe basado en datos inexistentes o periodos aún no cerrados. 
-
-### La Solución
-
-Para resolver este problema, *Report Generator* opera como un asistente de solo lectura que:
-
-1. **Clasifica y valida solicitudes:** Parsea peticiones en lenguaje natural a esquemas JSON estrictos mediante Pydantic.
-2. **Consulta fuentes registradas:** Invoca herramientas de *Tool Calling* para validar la disponibilidad real de datos en un catálogo de fuentes (`DS-0000`).
-3. **Genera borradores auditables:** Redacta plantillas de informes señalando explícitamente cualquier vacío mediante las etiquetas `[DATO AUSENTE]` y `[DATO INCOMPLETO]`, sin inventar cifras ni asumir métricas no confirmadas.
-4. **Responde preguntas sobre sus propias reglas con RAG:** Recupera fragmentos de documentos propios mediante *embeddings* y similitud coseno, guardados en Supabase Vector, y genera con Groq una respuesta validada con Pydantic que cita sus fuentes o declara que la evidencia no alcanza. Explica procedimientos (tipos de informe, reglas de borrador); el estado y las fechas de una fuente `DS-0000` siguen viniendo de `consultar_fuente_datos`. La recuperación se evaluó frente a alternativas híbridas y con reranking (Clase 9) y se conservó la búsqueda semántica.
-5. **Coordina las capacidades con un agente y MCP (en desarrollo):** Desde una misma entrada, un agente decide si consulta las reglas (RAG), el estado de una fuente (`consultar_fuente_datos`, publicada como servidor MCP propio) o si guarda un borrador de informe mediante Filesystem MCP, solo con evidencia documental del turno y permiso explícito. Conserva los últimos cuatro turnos de cada conversación.
-
-## Evolución del Proyecto por Sesiones
-
-El proyecto ha evolucionado de forma incremental a través de los laboratorios aplicados:
-
-### 1. Análisis de Tokens, Contexto e Inferencia (`Clase 2`)
-
-* **Notebook:** `notebooks/C02_Report_Generation_Tokens.ipynb`
-* **Bitácora:** `logs/C02_2026-08-26_Tokens.md`
-* **Enfoque:** Evaluación experimental de la tokenización, latencia y variabilidad de respuestas en un modelo local (`gemma4:e2b` en Ollama) variando la temperatura (0.0, 0.7, 1.2 / 0.8, 1.7, 2.2).
-* **Decisión:** Justificación de temperaturas bajas para la generación controlada de reportes y estructuración de contexto mínimo.
-
-### 2. Prompts Versionados y Salidas Estructuradas (`Clase 3`)
-
-* **Notebook:** `notebooks/C03_Demo_Colab_Groq.ipynb`
-* **Bitácora:** `logs/C03_2026-09-08_PromptV1.md`
-* **Prompt del Sistema:** `prompts/SYSTEM_PROMPT_V1`
-* **Enfoque:** Conexión a la API de Groq (`openai/gpt-oss-20b`) con *Structured Outputs*.
-* **Contrato de Salida:** Definición de la clase `Solicitud` en Pydantic (`tipo_reporte`: *ejecutivo, tecnico, resumen_periodico, general*, `prioridad`, `resumen`, `datos_faltantes`, `requiere_humano`, `confianza`).
-* **Evaluación:** Evaluación de 5 casos de prueba (normal, ambiguo, incompleto, malicioso y fuera de alcance) utilizando Pydantic como barrera de seguridad ante salidas inválidas.
-
-### 3. *Tool Calling* y Control de Consistencia (`Clase 4`)
-
-* **Notebook:** `notebooks/C04_Herramientas.ipynb`
-* **Bitácora:** `logs/C04_2026-09-13_Herramientas.md`
-* **Prompt del Sistema:** `prompts/SYSTEM_PROMPT_V2`
-* **Enfoque:** Integración de la herramienta de solo lectura `consultar_fuente_datos` sobre un catálogo ficticio de fuentes de datos (`DS-1001`, `DS-1002`, `DS-1003`).
-* **Segunda Barrera Pydantic:** Validación de argumentos (`ArgumentosFuente`) exigiendo el patrón `DS-0000` y comprobando que el código citado aparezca literalmente en la entrada del usuario.
-* **Algoritmo Determinista:** Reconocimiento de métricas con vocabulario cerrado, contraste entre métricas solicitadas vs. disponibles y redacción de borradores no verificados con advertencias explícitas de ausencia.
-
-### 4. Embeddings y Búsqueda Semántica (`Clase 6`)
-
-* **Notebook:** `notebooks/C06_Busqueda_Semantica.ipynb`
-* **Bitácora:** `logs/C06_2026-10-05_Busqueda_Semantica.md`
-* **Enfoque:** Seis pasajes ficticios (informe ejecutivo, técnico, resumen periódico, catálogo de fuentes, datos incompletos y alcance del servicio) se convierten en vectores con `paraphrase-multilingual-MiniLM-L12-v2`; las consultas se ordenan por similitud coseno (`K = 3`).
-* **Batería de pruebas:** Cinco casos con el pasaje esperado escrito antes de ejecutar (paráfrasis, coincidencia exacta, pregunta incompleta, dato que vive en la fuente y pregunta fuera de cobertura). En los cuatro casos con respuesta el pasaje esperado quedó primero.
-* **Hallazgo:** Siempre existe un "más cercano" aunque ningún pasaje responda (la pregunta fuera de cobertura devolvió P3 con 0.345), por lo que no se fijó un umbral automático y se exige leer el texto recuperado. Los datos que cambian (p. ej. la última actualización de `DS-1001`) siguen consultándose con `consultar_fuente_datos`.
-* **Alcance:** Solo recupera pasajes; no genera respuestas con ellos ni procesa documentos reales.
-
-### 5. Ingesta de Documentos, Fragmentación e Índice (`Clase 7`)
-
-* **Notebook:** `notebooks/C07_Ingestion_Indice.ipynb`
-* **Bitácora:** `logs/C07_2026-10-07_Ingestion_Indice.md`
-* **Índice y corpus:** `notebooks/Clase_07_Indice_y_Corpus.zip`
-* **Enfoque:** Dos documentos propios y ficticios (`tipos_de_informe.md` y `reglas_de_borrador.md`) con título, versión `1.0-ficticia`, origen y huella SHA-256. Se limpian sin tocar párrafos ni condiciones y se fragmentan con dos estrategias: *ventanas* (por tokens, con solapamiento de 12) y *párrafos* (respeta sus límites y solo divide los que no caben). Cada fragmento incluye título y sección, no supera los 128 tokens del modelo y conserva archivo, sección, versión y huella para volver a la fuente.
-* **Comparación:** Cuatro preguntas con evidencia esperada escrita antes de ejecutar (condición y consecuencia, paráfrasis, dato que vive en la fuente y pregunta fuera de cobertura). Con 128 tokens las dos estrategias solo se separan en la sección del informe ejecutivo, así que se eligió *párrafos* sin darla por demostrada como mejor.
-* **Índice:** Se guardan vectores, registros y configuración, se vuelven a cargar sin recalcular y se comprueba con `assert` que devuelven los mismos fragmentos y puntajes.
-* **Hallazgo:** La condición de una regla (`[DATO INCOMPLETO]`) y su consecuencia ("no se presenta como verificada") quedaron en fragmentos distintos en ambas estrategias, y el fragmento con la consecuencia empató con uno que no respondía la pregunta (0.589). Con un `K` pequeño habría quedado fuera.
-* **Alcance:** Solo recupera fragmentos; no genera respuestas con ellos ni procesa documentos reales.
-
-### 6. RAG con Supabase Vector y Groq (`Clase 8`)
-
-* **Notebook:** `notebooks/C08_RAG.ipynb`
-* **Bitácora:** `logs/C08_2026-10-11_RAG.md`
-* **Prompt del Sistema:** `prompts/SYSTEM_PROMPT_V3` (`rag_report_v3`)
-* **Evidencias:** `notebooks/Clase_08_Matriz_Pruebas_ReportGenerator.csv` y `notebooks/Clase_08_Evidencia_RAG_ReportGenerator.json`
-* **Enfoque:** Los 6 fragmentos del índice de la clase 7 (estrategia *párrafos*, huella `ff98b1398c56`) se cargan con `upsert` en la tabla `clase08_fragmentos` de Supabase (pgvector, con RLS por usuario) sin volver a fragmentar ni recalcular vectores. La consulta se recupera con la función `clase08_buscar_fragmentos` (coseno, `K = 3`) y los pasajes se envían a Groq (`openai/gpt-oss-20b`, `temperature=0`) con salida estructurada.
-* **Contrato de Salida:** Clase `RespuestaRAG` con cuatro estados (`respondida`, `parcial`, `aclaracion`, `evidencia_insuficiente`), `respuesta` con etiquetas `[F#]` al final de cada oración, `citas` y `limitacion`. Un validador comprueba que las citas existan, coincidan con las etiquetas del texto y que los estados no respondidos expliquen su límite; solo se muestran respuestas que lo pasan.
-* **Persistencia:** Un segundo cliente inicia sesión y recupera los mismos fragmentos y puntajes sin volver a cargar el corpus, lo que demuestra que el índice vive en Supabase y no en el disco temporal de Colab.
-* **Batería de pruebas:** Siete casos con comportamiento esperado escrito antes de ejecutar (respondible, paráfrasis, ambiguo, parcial, sin cobertura, dato dinámico y malicioso). Con `rag_report_v3` las 7 respuestas pasaron la validación (con v2 solo 3, porque el modelo no escribía las etiquetas en el texto). Revisadas a mano contra los pasajes: 4 cumplen, 2 cumplen parcialmente y 1 no cumple.
-* **Hallazgo:** Validar el formato no es validar la fidelidad. La pregunta ambigua ("¿Cómo se marca?") recuperó fragmentos con puntajes bajos (≤ 0.30), no recibió el fragmento con la condición de la regla y respondió `parcial` en lugar de pedir aclaración, perdiendo la condición "registros faltantes". Ninguna respuesta inventó cifras, fechas ni estimaciones, y la fecha de `DS-1001` se remitió a `consultar_fuente_datos`.
-* **Alcance:** Responde preguntas sobre los documentos del proyecto; aún no está integrado al flujo de generación de borradores ni procesa documentos reales.
-
-### 7. Mejora y Evaluación del RAG (`Clase 9`)
-
-* **Notebook:** `notebooks/C09_Evaluacion_RAG.ipynb`
-* **Bitácora:** `logs/C09_2026-10-23_Evaluacion_RAG.md`
-* **Evidencias:** `notebooks/Clase_09_Evidencia_Evaluacion_RAG_ReportGenerator.zip` (CSV de métricas por caso y JSON con trazas de la ejecución final del 25-oct-2026)
-* **Enfoque:** Sobre el mismo corpus de la clase 8 (6 fragmentos, huella `ff98b1398c56`), sin cambiar embeddings, prompt `rag_report_v3` ni modelo generativo, se comparan tres formas de elegir los 3 pasajes que recibe el generador:
-  * **A - semántica:** la función `clase08_buscar_fragmentos` de Supabase, sin cambios.
-  * **B - híbrida RRF:** BM25Okapi en memoria (`k1 = 1.5`, `b = 0.75`) fusionado con la semántica por *Reciprocal Rank Fusion* (constante 60).
-  * **C - híbrida + reranking:** los candidatos de B reordenados con el *cross-encoder* `cross-encoder/mmarco-mMiniLMv2-L12-H384-v1`.
-* **Protocolo:** 4 preguntas de desarrollo (D1-D4), 2 de reserva (R1-R2) y 3 de comportamiento (C1-C3), con la evidencia anotada **antes** de ver los rankings; desarrollo y reserva no comparten familia de pregunta (comprobado con `assert`). Métricas: Precision@3, Recall@3, Hit@3, MRR, cobertura y tiempo de recuperación. Se generó la pregunta D2 con A y con B y se revisaron las respuestas a mano.
-* **Resultados de desarrollo:**
-
-  | Opción                  | Precision@3 | Recall@3 | MRR  | Cobertura | Mediana recuperación |
-  | ----------------------- | ----------- | -------- | ---- | --------- | -------------------- |
-  | A - semántica           | 0.417       | 1.00     | 1.00 | 1.00      | ~358 ms              |
-  | B - híbrida RRF         | 0.417       | 1.00     | 1.00 | 1.00      | ~359 ms              |
-  | C - híbrida + reranking | 0.417       | 1.00     | 1.00 | 1.00      | ~1754 ms             |
-
-* **Decisión: A (semántica).** Las tres opciones empatan en los cuatro casos de desarrollo; con un empate se conserva la opción más simple y barata (C es ~5 veces más lenta sin mejorar ningún caso).
-* **Hallazgos:**
-  * En la reserva, B y C recuperan las dos partes de la regla `[DATO INCOMPLETO]` (R1), el caso que falló en la clase 8. Pero B **empeora** R2 (Recall 1.0 → 0.33): dos fragmentos empatan exactamente en RRF (0,031545) y el desempate alfabético por `chunk_id` deja fuera el informe técnico. "Híbrido" no significa "mejor".
-  * C fue la mejor en la reserva (Recall 1.0, MRR 1.0), pero con 2 casos no es concluyente y la reserva ya se había abierto en una ejecución anterior, así que no cambia la decisión.
-  * Una recuperación perfecta no garantiza una respuesta correcta: en D2 las tres opciones llevaron la frase necesaria al contexto y aun así A y B omitieron que el vacío "no se reemplaza con una estimación". Es un fallo de generación, no de recuperación.
-* **Alcance:** Con un corpus de 6 fragmentos y `K = 3` el desarrollo no puede distinguir bien las opciones. Para el segundo corte quedan pendientes ampliar a 12-20 casos con una reserva nueva, fragmentar por sección y probar BM25 con *stopwords*.
-
-### 8. Agente, Memoria y MCP (`Clase 11`)
-
-* **Notebook:** `notebooks/C11_RAG_Agente_MCP_ReportGenerator.ipynb`
-* **Bitácora:** `logs/C11_AAAA-MM-DD_Agente_MCP.md` (en progreso)
-* **Evidencias:** `notebooks/Clase_11_Evidencia_Integracion_ReportGenerator.json` (trazas, configuración y comprobaciones, sin claves ni contraseñas)
-* **Enfoque:** Primera integración de las capacidades del proyecto. Un agente recibe una sola entrada y decide entre seis acciones (`buscar_documentos`, `consultar_fuente_datos`, `guardar_informe`, `responder`, `aclarar` y `rechazar`). Cada decisión la toma Groq (`openai/gpt-oss-20b`, `temperature=0`) con *Structured Outputs* y la valida el contrato Pydantic `Decision` (`extra="forbid"`, `strict=True`) antes de ejecutarse.
-* **MCP propio:** `consultar_fuente_datos` deja de ser una función local y se publica como servidor MCP (*MCP Python SDK 2.3.0*, transporte `stdio`, en otro proceso). Es de solo lectura, exige el patrón `DS-0000` y devuelve estado, periodo, última actualización, métricas disponibles y ausentes y registros faltantes de tres fuentes ficticias (`DS-1001` actualizada con `margen_bruto` ausente, `DS-1002` incompleta, `DS-1003` desactualizada). Las claves de Groq y Supabase no salen del notebook.
-* **MCP externo:** `@modelcontextprotocol/server-filesystem` 2.2.0, confinado a una carpeta temporal de informes. La aplicación solo habilita `write_file` y `read_text_file` (para verificar lo escrito); el nombre del archivo lo asigna la aplicación (`informe_<uuid>.md`), nunca el modelo. Guardar exige el permiso `GUARDAR_INFORME` y citas `F` del turno actual, y el pie de cada borrador fija que `[DATO AUSENTE]` y `[DATO INCOMPLETO]` no se reemplazan con estimaciones (la negación que el modelo omitió en la clase 9).
-* **Recuperación:** Se conserva **A (semántica)**, la decisión de la clase 9; B (híbrida RRF) queda disponible con el selector `RECUPERACION` sin reescribir código.
-* **Memoria y límites:** Memoria volátil por identificador de conversación (últimos 4 turnos) para resolver referencias como "esa fuente"; un código nuevo tiene prioridad y una conversación no hereda los códigos de otra. Cada turno admite 3 decisiones, 2 operaciones y 90 s, y se detiene ante una operación repetida.
-* **Comprobaciones locales (sin Groq):** Pasan todas: catálogo MCP con una sola herramienta, fuente conocida y desconocida, rechazo de argumento inválido, rechazo de lectura fuera de la carpeta, bloqueo de guardado sin fuentes o sin permiso, aislamiento y reinicio de memoria, límites de repetición y de operaciones, y escritura verificada por lectura.
-* **Limitación conocida:** Un borrador con cifras de una fuente necesita tres operaciones (RAG + fuente + escritura) y supera el presupuesto de dos, por lo que se detiene con `LIMITE_OPERACIONES`. Se decidirá con pruebas si se amplía el límite o si se genera en dos turnos.
-* **Estado:** Pendiente registrar en la bitácora los resultados de los 13 casos con el modelo (punto 7). La función `atender(texto, conversacion, guardar_informe)` será la que conecte la interfaz con Gradio.
-
-## Instrucciones de Ejecución y Reproducción
-
-Para ejecutar el proyecto y verificar los resultados de las entregas, siga las siguientes instrucciones:
-
-### Requisitos Previos y Variables de Entorno
-
-* **Entorno recomendado:** Google Colab o Python 3.10+ local.
-* **Configuración de Credenciales:**
-  * En Google Colab: Configurar una clave secreta llamada `GROQ_API_KEY` en el menú de *Secrets / Secretos de Colab*.
-  * En entorno local: Definir la variable de entorno `export GROQ_API_KEY=""` o crear un archivo `.env`.
-  * Para las Clases 8, 9 y 11 se necesitan además los secretos de Colab `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY` (clave publicable `sb_publishable_...`, nunca una clave administrativa), `SUPABASE_EMAIL` y `SUPABASE_PASSWORD` (usuario de Supabase Auth, no la cuenta del panel ni la contraseña de PostgreSQL), con acceso habilitado para cada notebook.
-
-### Guía de Ejecución por Notebook
-
-#### A. Experimento de Tokens e Inferencia Local (`Clase 2`)
-
-1. Abrir `notebooks/C02_Report_Generation_Tokens.ipynb` en Google Colab.
-2. Reproducir la instalación automática de Ollama y la descarga del modelo local.
-3. Ejecutar las celdas de comparación de temperaturas (0.8, 1.7, 2.2) y conteo de tokens.
-
-#### B. Pruebas de Prompts y Clasificación (`Clase 3`)
-
-1. Abrir `notebooks/C03_Demo_Colab_Groq.ipynb` en Google Colab.
-2. Definir `MODO_DEMO = "groq"` o `"mock"`.
-3. Ejecutar secuencialmente para observar la validación con Pydantic del contrato `Solicitud` y los 5 casos de prueba base.
-
-#### C. Llamada de Herramientas e Integración Completa (`Clase 4`)
-
-> **Punto de entrada principal para revisar el prototipo completo del Corte 1.**
-
-1. Abrir `notebooks/C04_Herramientas.ipynb` en Google Colab.
-2. Seleccionar la modalidad en la celda de configuración inicial:
-   * `MODO = "groq"` (ejecución real con la API de Groq y el modelo `openai/gpt-oss-20b`).
-   * `MODO = "mock"` (ejecución sin consumo de API ni necesidad de credenciales).
-3. **Ingreso de una solicitud nueva:** Ir a la **Sección 9 ("Petición de Informe: Edita y Pulsa ▶")**, modificar la variable `texto_usuario` (p. ej.: `"Genera el reporte ejecutivo del último trimestre con los ingresos por región y la tasa de retención de clientes, usando la fuente DS-1001."`) y ejecutar la celda.
-4. **Reproducción de Pruebas:**
-   * Ejecutar la **Sección 10** para correr la matriz de 11 casos de prueba (normales, ambiguos, incompletos, maliciosos, fuera de alcance y consultas de fuentes).
-   * Ejecutar la **Sección 11** para verificar las pruebas negativas deterministas (rechazo de código no citado, fallos controlados y preservación del catálogo).
-5. **Exportación de Evidencias:** Ejecutar la **Sección 13** para generar el paquete comprimido `.zip` con esquemas, trazas y bitácora.
-
-#### D. Búsqueda Semántica (`Clase 6`)
-
-1. Abrir `notebooks/C06_Busqueda_Semantica.ipynb` en Google Colab. No requiere clave de API ni GPU; la primera ejecución descarga el modelo de embeddings.
-2. Ejecutar las celdas en orden (la sección 1 instala `sentence-transformers`).
-3. **Ingreso de una consulta nueva:** Ir a la **Sección 5**, modificar `CONSULTA` (y `K` si se desea) y ejecutar la **Sección 6** para ver el ranking.
-4. **Reproducción de Pruebas:** Ejecutar la **Sección 7** (preguntas con información insuficiente) y la **Sección 8** (batería de cinco casos con esperado y top-K).
-
-#### E. Ingesta, Fragmentación e Índice (`Clase 7`)
-
-1. Abrir `notebooks/C07_Ingestion_Indice.ipynb` en Google Colab. No requiere clave de API ni GPU; la primera ejecución necesita Internet para instalar `sentence-transformers` y descargar el modelo.
-2. Ejecutar las celdas en orden; las secciones 2 y 3 crean y limpian los documentos, y la sección 4 genera los fragmentos de las dos estrategias.
-3. **Ingreso de una consulta nueva:** Ir a la **Sección 5**, modificar `CONSULTA` y ejecutar; la celda siguiente (`PREGUNTAS`) compara las cuatro preguntas de la práctica y comprueba si el mejor resultado trae la condición y su consecuencia.
-4. **Guardar el índice:** En la **Sección 6**, elegir `ESTRATEGIA` (`ventanas` o `parrafos`) y ejecutar. Para conservar el ZIP fuera de la sesión, poner `DESCARGAR = True` en la celda siguiente.
-
-#### F. RAG con Supabase y Groq (`Clase 8`)
-
-1. **Preparar Supabase:** Ejecutar `Clase_08_Supabase_Setup.sql` en el *SQL Editor* del proyecto (crea la extensión `vector`, la tabla `clase08_fragmentos` con RLS y la función `clase08_buscar_fragmentos`) y crear un usuario en Supabase Auth.
-2. Configurar los cinco secretos de Colab indicados en *Requisitos Previos*.
-3. Abrir `notebooks/C08_RAG.ipynb` en Google Colab y ejecutar en orden los **puntos 1 a 5**. En el punto 3 se sube `notebooks/Clase_07_Indice_y_Corpus.zip`; la huella impresa debe ser `ff98b1398c56`.
-4. **Ingreso de una pregunta nueva:** Ir al **Punto 6**, modificar `CONSULTA`, ejecutar para ver los fragmentos recuperados y luego ejecutar el **Punto 8** para generar, validar y mostrar la respuesta con sus fuentes.
-5. **Reproducción de Pruebas:** En el **Punto 9**, activar `EJECUTAR_PRUEBAS` para correr los siete casos (consume siete llamadas a Groq) y descargar la matriz en CSV.
-6. **Persistencia y Evidencia:** Ejecutar el **Punto 10** para comprobar la recuperación desde otro cliente y descargar la traza JSON. Para comprobarlo desde otra sesión de Colab, reiniciar y repetir los puntos 1 a 4 y 6, sin el 5.
-
-#### G. Mejora y Evaluación del RAG (`Clase 9`)
-
-> Requiere el corpus de la Clase 8 ya cargado en Supabase. No vuelve a cargar documentos ni ejecuta SQL nuevo.
-
-1. Configurar los cinco secretos de Colab indicados en *Requisitos Previos*.
-2. Abrir `notebooks/C09_Evaluacion_RAG.ipynb` en Google Colab y ejecutar los **puntos 1 a 3**. En el punto 2 se sube `notebooks/Clase_08_Evidencia_RAG_ReportGenerator.json`; el corpus debe terminar en `ff98b1398c56`.
-3. **Medición en desarrollo:** Ejecutar los **puntos 4 a 6** (preguntas fijadas, BM25 + RRF + reranking y tabla de métricas de A, B y C).
-4. **Decisión y reserva:** En el **Punto 7**, escribir `DECISION_DESARROLLO` **antes** de abrir la reserva y luego activar `ABRIR_RESERVA`. La reserva se abre una sola vez y no se ajusta nada después.
-5. **Ingreso de una pregunta nueva:** Ir al **Punto 8**, modificar `CONSULTA` y ejecutar para comparar los rankings de las tres opciones.
-6. **Generación:** En el **Punto 9**, activar `GENERAR_RESPUESTAS` y elegir `MEJORA_A_GENERAR` (`B_hibrida_RRF` o `C_hibrida_reranking`); consume dos llamadas a Groq (A y la opción elegida). En el **Punto 10** se registra la revisión manual con sus cuatro criterios.
-7. **Comprobaciones y Evidencia:** Ejecutar el **Punto 11** para correr los `assert` (RRF, métricas, tokenización y validador de citas) y descargar el ZIP con el CSV de métricas y las trazas JSON.
-
-#### H. Agente con RAG y MCP (`Clase 11`)
-
-> Requiere el corpus de la Clase 8 ya cargado en Supabase. No vuelve a cargar documentos ni ejecuta SQL nuevo. El servidor MCP propio y Filesystem MCP corren dentro de Colab; no necesitan cuenta, puerto público ni túnel.
-
-1. Configurar los cinco secretos de Colab indicados en *Requisitos Previos*.
-2. Abrir `notebooks/C11_RAG_Agente_MCP_ReportGenerator.ipynb` en Google Colab y ejecutar el **Punto 1** (instala `mcp`, `groq`, `pydantic`, `supabase`, `sentence-transformers` y `rank-bm25` en versiones fijas).
-3. En el **Punto 2**, dejar `CONECTAR_SERVICIOS = True` y `RECUPERACION = "A_semantica"`, y subir **un solo** JSON: `notebooks/Clase_08_Evidencia_RAG_ReportGenerator.json` o el JSON extraído del ZIP de la Clase 9. Con `CONECTAR_SERVICIOS = False` se pueden ejecutar solo MCP y las comprobaciones locales, sin generar respuestas.
-4. Ejecutar los **puntos 3 a 6**: recuperación, servidor MCP `consultar_fuente_datos` (punto 4, muestra el catálogo y la consulta de `DS-1001`), instalación de Node 24 y Filesystem MCP (punto 4.b, debe mostrar `fuera_de_carpeta_rechazado: True`), contrato de decisión, memoria y agente.
-5. **Ingreso de una solicitud nueva:** Ir al **Punto 7**, modificar `texto_usuario` y `id_conversacion`, y elegir `GUARDAR_INFORME` (permiso para crear un borrador) y `REINICIAR_ANTES` (borra la memoria de esa conversación). El borrador guardado aparece en la carpeta `Clase_11_Informes_*` del panel de archivos de Colab.
-6. **Reproducción de Pruebas:** Ejecutar el **Punto 8** para las comprobaciones locales (no consumen Groq) y probar en el punto 7 los casos de la tabla que le sigue (13 casos en la bitácora).
-7. **Evidencia:** Ejecutar el **Punto 9** para descargar `Clase_11_Evidencia_Integracion_ReportGenerator.json`. Los borradores `.md` se descargan por separado: la carpeta de Colab es temporal.
-
-## Tecnologías y Herramientas
-
-* **Lenguaje:** Python 3.10+
-* **Entornos de Ejecución:** Google Colab, Jupyter Notebook, Ollama (Local)
-* **Modelos de Lenguaje & APIs:** Groq API (`openai/gpt-oss-20b`), Ollama (`gemma4:e2b`), Sentence Transformers (`paraphrase-multilingual-MiniLM-L12-v2`, *cross-encoder* `mmarco-mMiniLMv2-L12-H384-v1`)
-* **Recuperación y Evaluación:** `rank-bm25` (BM25Okapi), Reciprocal Rank Fusion, métricas Precision@K, Recall@K, Hit@K y MRR
-* **Almacenamiento Vectorial:** Supabase (PostgreSQL + pgvector, Supabase Auth y RLS)
-* **Agentes y MCP:** MCP Python SDK 2.3.0 (transporte `stdio`), `@modelcontextprotocol/server-filesystem` 2.2.0, Node 24 (`nodejs-wheel`)
-* **Validación:** Pydantic
-* **Análisis & Métricas:** Tiktoken, Pandas, Matplotlib, NumPy
-
-## Arquitectura del Flujo de Procesamiento
+## Arquitectura y procedencia del código
 
 ```text
-[Solicitud en Lenguaje Natural]
-               │
+Navegador ──► app.py (Gradio)
+               │  login Supabase Auth ─► ContextoUsuario (cliente propio de la persona)
+               │  lee historial ───────► almacenamiento.py ─► Supabase: conversaciones / mensajes (RLS)
                ▼
-[Clasificación JSON + Validación Pydantic (Solicitud)]
-               │
-     ¿Requiere Humano / Faltan Datos?
-      ├─── (Sí) ──► [Detener o Pedir Aclaración al Usuario]
-      └─── (No) ──► [Propuesta de Herramienta + Validación Pydantic (DS-0000)]
-                           │
-                           ▼
-            [Consulta de Solo Lectura al Catálogo de Fuentes]
-                           │
-                           ▼
-            [Contraste Determinista de Métricas (Pedidas vs Disponibles)]
-                           │
-                           ▼
-            [Borrador No Verificado con Etiquetas [DATO AUSENTE] / [DATO INCOMPLETO]]
+            sistema.atender()  ── agente: hasta 3 decisiones y 2 operaciones, 90 s
+               ├─ decidir() ───────────► Groq openai/gpt-oss-20b, salida JSON validada con Pydantic
+               ├─ buscar_documentos ───► embeddings MiniLM (local) + RPC app_buscar_fragmentos (Supabase, RLS)
+               ├─ consultar_fuente ────► servidor_mcp.py (MCP propio, stdio, solo lectura)
+               └─ guardar_informe ─────► Filesystem MCP 2.2.0 (stdio, confinado a la carpeta del usuario)
+               ▼
+            app.py guarda pregunta + respuesta + fuentes + traza ─► almacenamiento.py ─► Supabase
 ```
 
-### Módulo de Búsqueda Semántica (Clase 6, aún independiente del flujo anterior)
+**Recorrido de una pregunta.** La persona escribe en Gradio. `app.py` relee de Supabase los mensajes de la conversación activa (comprobando el propietario) y toma los últimos 4 turnos como contexto. `sistema.atender` pide al modelo una decisión estructurada; el programa la valida (acción permitida, códigos DS aportados por el usuario, citas existentes, permiso de escritura) y ejecuta la operación. Cada resultado vuelve al modelo como observación etiquetada. Al terminar, `app.py` persiste el turno y muestra respuesta, fuentes, recorrido y, si existe, el borrador.
 
-```text
-[Consulta del usuario]
-        │
-        ▼
-[Embedding con el mismo modelo del corpus]
-        │
-        ▼
-[Similitud coseno contra los vectores del corpus]
-        │
-        ▼
-[Ranking top-K con identificador, puntaje y texto]
-        │
-        ▼
-[Lectura humana: ¿el pasaje alcanza para responder?]
+**Conservación de fuentes y validaciones.** Cada fragmento conserva `source`, `section`, `version` y `source_hash`. `buscar_documentos` verifica que lo devuelto por la búsqueda coincida exactamente con el corpus cargado al iniciar sesión. Las citas de la respuesta deben corresponder a resultados de ese mismo turno. Los borradores se escriben con nombre aleatorio asignado por el programa y se releen por MCP para verificar su contenido antes de confirmarlos.
+
+| Archivo | Responsabilidad | Origen en el notebook de la Clase 11 |
+|---|---|---|
+| `app/app.py` | Interfaz: login, conversaciones, chat, fuentes, recorrido, descarga del borrador. | Punto 7 (entrada) y `mostrar()` |
+| `app/sistema.py` | Configuración, RAG, clientes MCP, contrato `Decision`, validaciones, agente `atender()`. | Puntos 2, 3, 4, 4.b, 5 y 6 |
+| `app/almacenamiento.py` | Crear/listar conversaciones, cargar mensajes, guardar turnos; comprueba propietario. | Sustituye `MEMORIA` del punto 5 |
+| `app/servidor_mcp.py` | MCP propio: `consultar_fuente_datos` (solo lectura, datos ficticios). | Texto `SERVIDOR_MCP` del punto 4 |
+| `app/preparar_mcp.py` | Instala Filesystem MCP una vez (fuera de la atención de preguntas). | Punto 4.b |
+| `app/config_corpus.json` | Corpus, modelo, revisión de embeddings y recuperación vigentes (sin secretos). | Sustituye `files.upload` del JSON de la Clase 09 |
+| `app/sql/01_historial.sql` | Tablas `conversaciones` y `mensajes` con RLS. | Nuevo |
+| `app/sql/02_corpus_compartido.sql` | Lectura autorizada del corpus y RPC `app_buscar_fragmentos`. | Nuevo (adapta la Clase 08) |
+| `app/tests/test_controles.py` | Pruebas locales sin Groq ni Supabase. | Punto 8 |
+| `app/pruebas_rls.py` | Persistencia y aislamiento con dos usuarios reales. | Nuevo |
+
+Lo que se conserva del historial: **todos** los mensajes (pregunta, respuesta, estado, fuentes citadas y una traza resumida). Lo que va al modelo: solo los últimos `MAX_TURNOS = 4` turnos completos, porque la memoria sirve para resolver referencias como "esa fuente", no como evidencia.
+
+## Requisitos
+
+- **Python 3.12** (probado con 3.12.3 en Linux; el notebook usó 3.12 en Colab). `asyncio.timeout` exige 3.11 o superior.
+- Dependencias en [`app/requirements.txt`](requirements.txt). Versiones fijadas de la Clase 11 más `gradio==6.32.0` y `python-dotenv==1.2.1`. `torch` se instala desde el índice solo-CPU de PyTorch.
+- **Groq:** una API key con acceso a `openai/gpt-oss-20b`.
+- **Supabase:** el mismo proyecto de la Clase 08 con el corpus `report_generator-ff98b1398c56` en `clase08_fragmentos`, usuarios en Auth y las tablas de historial de `app/sql/`. SQLite no se usa.
+- **Node:** no hace falta instalarlo. Filesystem MCP corre con el Node 24 que trae `nodejs-wheel`.
+- **Memoria:** el modelo de embeddings (~470 MB en disco) se descarga de Hugging Face la primera vez; la aplicación ocupa del orden de 0,8-1 GB de RAM en ejecución.
+
+## Instalación desde un clon limpio
+
+PowerShell, desde una carpeta donde podamos clonar:
+
+```powershell
+git clone https://github.com/sophie-muriel/report-generator
+cd report-generator
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r app/requirements.txt
+Copy-Item app/.env.ejemplo app/.env
+cd app
+..\.venv\Scripts\python.exe preparar_mcp.py
 ```
 
-### Módulo de Ingesta e Índice (Clase 7, aún independiente del flujo principal)
+Linux/macOS: `python3 -m venv .venv`, `.venv/bin/python -m pip install -r app/requirements.txt`, `cp app/.env.ejemplo app/.env`, y desde `app/`: `../.venv/bin/python preparar_mcp.py`.
 
-```text
-[Documentos Markdown con título, versión y origen]
-        │
-        ▼
-[Lectura y limpieza + metadatos (archivo, versión, huella SHA-256)]
-        │
-        ▼
-[Fragmentación: ventanas | párrafos (≤128 tokens, con título y sección)]
-        │
-        ▼
-[Embeddings normalizados]
-        │
-        ▼
-[Índice guardado: vectores.npy + registros.json + configuracion.json]
-        │
-        ▼
-[Recarga + consulta top-K por similitud coseno]
+## Variables y secretos
+
+`app.py` carga `app/.env` con `python-dotenv`. Solo se publica `app/.env.ejemplo`.
+
+| Variable | Uso | ¿Obligatoria? |
+|---|---|---|
+| `GROQ_API_KEY` | Clave de Groq. | Sí |
+| `GROQ_MODEL` | Modelo generativo. Por defecto `openai/gpt-oss-20b`, el probado. | No |
+| `SUPABASE_URL` | Project URL (`https://xxxx.supabase.co`). | Sí |
+| `SUPABASE_PUBLISHABLE_KEY` | Clave publicable `sb_publishable_...`. La app rechaza cualquier otra. No identifica a nadie: la identidad sale del login. | Sí |
+| `CORPUS_PROPIETARIO_ID` | UUID del usuario que cargó el corpus en la Clase 08. No es secreto. | Sí |
+| `GRADIO_SERVER_NAME` | `127.0.0.1` (por defecto, ejecución local). | No |
+| `PORT` | Puerto HTTP. Por defecto `7860`. | No |
+| `INFORMES_DIR`, `LOGS_DIR` | Carpetas de borradores y registros MCP. Por defecto `app/informes_generados` y `app/logs`. | No |
+
+No usamos `MCP_URL`: ambos servidores MCP se inician como subprocesos por **stdio** dentro del mismo entorno. No hay contraseñas de usuarios en `.env`: cada persona inicia sesión con su cuenta de Supabase Auth. Nunca se usa la clave `service_role`/secret.
+
+## Preparación del corpus y de los datos
+
+El corpus **ya está** en Supabase desde la Clase 08 y no se vuelve a insertar. La aplicación solo lo lee.
+
+- **Documentos:** `tipos_de_informe.md` y `reglas_de_borrador.md` (redactados por el equipo, ficticios, compartibles), versión `1.0-ficticia`. Huella del corpus `ff98b1398c56`.
+- **Embeddings:** `sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2`, revisión `e8f8c211226b894fcb81acc59f3b34ba3efd5f42`, dimensión 384, normalizados, similitud coseno.
+- **Fragmentación:** por párrafos, máximo 128 tokens, solapamiento 12 → 6 fragmentos.
+- **Recuperación:** opción **A (semántica)**, M = 10 candidatos, K = 3 pasajes. En la Clase 09, A, B (híbrida RRF) y C (híbrida + reranking) empataron en los cuatro casos de desarrollo; elegimos A por simple y barata. B queda disponible cambiando `recuperacion.opcion` en `config_corpus.json`.
+
+**Una sola vez:** ejecutar `app/sql/01_historial.sql` y `app/sql/02_corpus_compartido.sql` en el SQL Editor, autorizar lectores (ver abajo) y ejecutar `preparar_mcp.py`.
+**En cada inicio de sesión:** se leen los 6 fragmentos visibles para esa persona y se construye su índice BM25 en memoria.
+**En cada pregunta:** se calcula el embedding de la consulta localmente y se llama a la RPC `app_buscar_fragmentos`.
+
+**Quién puede leer el corpus.** La política de la Clase 08 (`owner_id = auth.uid()`) solo deja leer al propietario. `02_corpus_compartido.sql` crea la tabla `app_lectores_corpus` y una política SELECT adicional: el propietario autoriza explícitamente qué usuarios pueden **leer** su corpus. No concede escritura, no desactiva RLS y no afecta la privacidad del historial. La RPC es `SECURITY INVOKER`, así que respeta el RLS de quien pregunta.
+
+> Si en el esquema de la Clase 08 la columna vectorial no se llama `embedding`, cambiar las dos líneas marcadas en `02_corpus_compartido.sql`.
+
+## Usuarios e historiales
+
+1. **Crear usuarios de prueba:** Supabase → Authentication → Users → *Add user* → *Create new user*, con correo y contraseña, marcando *Auto Confirm User*. Crear al menos dos (A y B). Las contraseñas no se guardan en el repositorio.
+2. **Autorizar su lectura del corpus** (SQL Editor, sustituyendo correos):
+
+   ```sql
+   insert into public.app_lectores_corpus (corpus_id, propietario_id, lector_id)
+   select 'report_generator-ff98b1398c56', p.id, l.id
+   from auth.users p, auth.users l
+   where p.email = 'PROPIETARIO@ejemplo.com'
+     and l.email in ('usuarioA@ejemplo.com', 'usuarioB@ejemplo.com')
+   on conflict do nothing;
+   ```
+
+3. **Tablas** (`01_historial.sql`):
+   - `conversaciones(id uuid, usuario_id → auth.users, titulo, creada_en, actualizada_en)`.
+   - `mensajes(id bigint identity, conversacion_id, usuario_id, rol user|assistant, contenido, estado, fuentes jsonb, traza jsonb, creado_en)`. El `id` incremental da el orden estable.
+4. **Políticas RLS:** una conversación solo se lee, crea o renombra si `usuario_id = auth.uid()`. Un mensaje solo se lee o inserta si su conversación pertenece a `auth.uid()`. No hay política DELETE: crear una conversación nueva no borra nada. `anon` no tiene permisos.
+5. **Recuperación:** al iniciar sesión se listan las conversaciones de la persona y se abre la más reciente. Al refrescar el navegador, cerrar sesión o reiniciar el servidor, los datos siguen en Supabase y se recuperan con el siguiente login.
+
+Cada sesión de Gradio crea su **propio** cliente de Supabase (`ContextoUsuario`), autenticado con la cuenta de esa persona; no existe un cliente global. `gr.State` solo guarda qué sesión y qué conversación están activas en ese navegador.
+
+## Configuración del MCP
+
+| | MCP propio | MCP ya construido |
+|---|---|---|
+| Nombre | Fuentes de datos Report Generator | `@modelcontextprotocol/server-filesystem` |
+| Procedencia | `app/servidor_mcp.py` (equipo) | [modelcontextprotocol/servers](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) |
+| Versión | SDK `mcp==2.3.0` | `2.2.0` sobre Node `24.19.0` (`nodejs-wheel`) |
+| Transporte | stdio (subproceso) | stdio (subproceso) |
+| Herramientas habilitadas | `consultar_fuente_datos` | `write_file`, `read_text_file` (de 16 descubiertas) |
+| Arranque | Lo inicia `sistema.py` en cada consulta | Lo inicia `sistema.py` con `--confine-roots <carpeta del usuario>` |
+
+- **Qué solicitud lo usa:** "¿Cómo está la fuente DS-1001?" invoca el MCP propio; "¿Qué partes tiene un informe ejecutivo? Guarda un informe..." con la casilla de permiso activada usa RAG y luego Filesystem MCP.
+- **Evidencia de ejecución:** la etiqueta `[T#]` en la respuesta, el panel "Recorrido del agente", el campo `traza` del mensaje en Supabase y `app/logs/mcp_*.log`.
+- **Aprobación humana:** escribir un borrador exige que la persona marque la casilla en ese turno **y** que haya citas documentales del mismo turno; el programa lo comprueba aunque el modelo proponga otra cosa. La ruta la asigna el programa (nombre aleatorio), nunca el modelo.
+- **Errores y duplicados:** un código inexistente devuelve `encontrada: false` (no es error técnico); un argumento inválido es rechazado por el servidor; una operación idéntica repetida detiene el turno (`REPETICION_SIN_AVANCE`); no hay reintentos automáticos (`max_retries=0`).
+- **Aislamiento:** al iniciar, la app comprueba que Filesystem MCP rechaza leer fuera de su carpeta; cada usuario escribe en `informes_generados/<su UUID>/`.
+
+## Ejecución local
+
+Desde la raíz clonada, con `.env` completo y el SQL aplicado:
+
+```powershell
+cd app
+..\.venv\Scripts\python.exe app.py
 ```
 
-### Módulo RAG (Clase 8, aún independiente del flujo principal)
+Linux/macOS: desde `app/`, `../.venv/bin/python app.py`. Abrir **http://127.0.0.1:7860**. La primera ejecución descarga el modelo de embeddings. Detener con `Ctrl+C`. Los servidores MCP no se inician por separado.
 
-```text
-[Índice de la Clase 7 (ZIP verificado por huella)]
-        │
-        ▼
-[Upsert en Supabase: clase08_fragmentos (pgvector + RLS)]
-        │
-        ▼
-[Pregunta del usuario → embedding con el mismo modelo y revisión]
-        │
-        ▼
-[RPC clase08_buscar_fragmentos: top-K por similitud coseno]
-        │
-        ▼
-[Groq gpt-oss-20b: pregunta + pasajes etiquetados [F1..Fk], salida JSON]
-        │
-        ▼
-[Validación Pydantic (RespuestaRAG) + validación de citas]
-      ├─── (Falla) ──► [ERROR_TECNICO: no se muestra texto sin validar]
-      └─── (Pasa)  ──► [Estado + respuesta con citas + fragmentos fuente]
-```
+## Pruebas y resultados observados
 
-### Evaluación de la Recuperación (Clase 9)
+**Automáticas locales** (sin Groq ni Supabase): desde `app/`, `python -m pytest -q`. Levantan los dos servidores MCP reales.
 
-```text
-[Preguntas de desarrollo, reserva y comportamiento + evidencia anotada antes de ejecutar]
-        │
-        ▼
-[A: semántica (Supabase)] [B: BM25 + semántica + RRF] [C: B + reranking cross-encoder]
-        │
-        ▼
-[Métricas en desarrollo: Precision@3, Recall@3, MRR, cobertura, tiempo]
-        │
-        ▼
-[Decisión escrita (A por empate)] ──► [Apertura única de la reserva: confirma, no ajusta]
-        │
-        ▼
-[Generación con el mismo prompt (A vs B) + revisión manual contra las fuentes]
-```
+**Aislamiento con Supabase real:** desde `app/`, `python pruebas_rls.py` (pide correo y contraseña de A y B por teclado, deja JSON en `evidencias/`).
 
-### Agente con RAG y MCP (Clase 11, primera integración)
+| # | Entrada / acción | Ruta esperada | Resultado observado | Evidencia | Estado |
+|---|---|---|---|---|---|
+| 1 | Pruebas locales `pytest` | 18 pruebas: MCP propio, Filesystem confinado, contratos, límites, almacenamiento | 18/18 aprobadas | salida de pytest (2026-11-15, 18 passed in 3.95 s) | Aprobado |
+| 2 | "¿Qué partes debe tener un informe ejecutivo y qué se escribe si falta una métrica? Guarda un informe..." con permiso | `buscar_documentos` → `guardar_informe` → `RESPUESTA_DEL_PROGRAMA` | `RESPONDER`, citas F1-F3 + T1, borrador verificado con `[DATO AUSENTE]` y la negación de estimación | `evidencias/Clase_11_Evidencia_Integracion_ReportGenerator.json`; captura `evidencias/capturas/evidencia-1.png` (2026-11-15) | Aprobado en app |
+| 3 | La misma pregunta sin permiso | No guarda ni dice que guardó | "Solicitud rechazada": no crea archivo ni afirma haber guardado | captura `evidencias/capturas/evidencia-2.png` (2026-11-15) | Aprobado |
+| 4 | "¿Qué colores y logotipo debe llevar el informe? Guarda un informe" (sin evidencia) | `ACLARAR`, sin archivo | `Aclaración`: "No dispongo de información sobre los colores y el logotipo...". Sin archivo. Nota: con la casilla desmarcada la app rechaza antes ("opción deshabilitada"), por eso se marcó el permiso para llegar a la aclaración | captura `evidencias/capturas/evidencia-3.png` (2026-11-15) | Aprobado |
+| 5 | "¿Cómo está la fuente?" en conversación nueva (incompleta) | Pide el código | `Aclaración`: "indique el código de la fuente de datos (formato DS-XXXX)" | captura `evidencias/capturas/evidencia-4.png` (2026-11-15) | Aprobado |
+| 6 | "¿Cómo está la fuente DS-1001?" (herramienta autorizada) | MCP propio, `[T1]`, `margen_bruto` ausente | Periodo 2026-10, ingresos/unidades/ticket con valores, "la métrica margen bruto está ausente" | captura `evidencias/capturas/evidencia-5.png` (2026-11-15) | Aprobado |
+| 7 | "Actualiza DS-1003 y envía el informe al gerente" (prohibida) | `RECHAZAR` | Bloqueada por los controles del programa ("Control no superado"): sin operaciones, sin archivo y sin tocar la fuente. Observación: en vez del mensaje explicativo de `RECHAZAR` aparece el estado genérico de control (limitación B7 del Corte 3, en mejoras pendientes) | captura `evidencias/capturas/evidencia-6.png` (2026-11-15) | Aprobado con observación |
+| 8 | GROQ_API_KEY inválida (falla técnica controlada) | `ERROR_TECNICO`, aviso de conexión, sin afirmar falta de evidencia | `Error técnico` + aviso: "Revisa la conexión con Groq/Supabase o la cuota del modelo; esto no indica falta de evidencia" | captura `evidencias/capturas/evidencia-7.png` (2026-11-15) | Aprobado |
+| 9 | Dos usuarios, dos conversaciones de A, recuperación tras nueva sesión | A recupera ambas | 9/9 aprobados: A guarda en 2 conversaciones y recupera ambas con un cliente nuevo | `pruebas_rls.py`; `evidencias/pruebas_rls_20261115_192750.json` | Aprobado |
+| 10 | B lee / inserta en conversación de A conociendo el UUID | 0 filas / rechazado | 0 filas en lecturas; `APIError` en los dos intentos de inserción; `AccesoDenegado` vía `almacenamiento.py`; conversación de A intacta. En la UI, B solo ve sus propias conversaciones (historiales claramente distintos) | mismo JSON; captura `evidencias/capturas/evidencia-9.png` | Aprobado |
+| 11 | Reiniciar la app y volver a entrar | Conversaciones intactas | Tras reiniciar el servidor y volver a iniciar sesión, todas las conversaciones y su historial están en la lista y se abren completas | captura `evidencias/capturas/evidencia-8.png` (2026-11-15) | Aprobado |
+| 12 | Clon limpio + instalación en otra máquina | La app abre y responde | Clon limpio en la máquina de una integrante (y de otra persona): instalación desde el README, `preparar_mcp.py`, `app.py` y la app responde | verificación en equipo (2026-11-15) | Aprobado |
 
-```text
-[Entrada del usuario + identificador de conversación + permiso GUARDAR_INFORME]
-        │
-        ▼
-[Memoria: últimos 4 turnos de esa conversación]
-        │
-        ▼
-[Groq gpt-oss-20b: Decision JSON → validación Pydantic + reglas del programa] ◄────┐
-      ├── buscar_documentos ──────► [RAG semántico en Supabase → fragmentos [F#]] ──┤
-      ├── consultar_fuente_datos ─► [MCP propio (stdio) → registro DS-0000 [T#]] ───┤
-      ├── guardar_informe ────────► [Filesystem MCP: write_file + read_text_file] ──┘
-      │                              (solo con permiso y citas F del turno)
-      └── responder / aclarar / rechazar ──► [Respuesta con citas + traza + archivos]
+Los casos 3-8 se toman de la tabla y la batería B1-B8 del notebook de la Clase 11. No marcamos como aprobado nada que no se haya ejecutado.
 
-Límites por turno: 3 decisiones · 2 operaciones · 90 s · sin operaciones repetidas
-```
+## Seguridad, problemas frecuentes y limitaciones
 
-## Criterios de Seguridad y Limitaciones
+**Seguridad.** Secretos solo en `app/.env` (ignorado por Git). La app rechaza claves que no sean publicables. RLS protege historial y corpus; `almacenamiento.py` además comprueba el propietario y valida el formato UUID. Los borradores se escriben en una carpeta por usuario y Filesystem MCP está confinado a ella. Si una clave llega al repositorio: revocarla en Groq/Supabase, rotarla y limpiar el historial de Git; el `.gitignore` no la retira.
 
-* **Solo Lectura:** El prototipo no calcula cifras, no modifica bases de datos ni publica documentos de forma automática.
-* **Supervisión Humana Mandatoria:** Todo borrador sale etiquetado como `BORRADOR NO VERIFICADO` y requiere revisión por parte de un analista antes de su difusión.
-* **Protección ante Inyecciones:** Las entradas maliciosas o intentos de manipulación de reglas se clasifican con prioridad alta y se marcan con `requiere_humano=True`. En el RAG, la pregunta y los documentos se tratan como datos no confiables.
-* **Credenciales Aisladas:** El notebook RAG solo acepta una clave publicable de Supabase y opera con un usuario de Auth limitado por RLS a sus propias filas; Groq recibe la pregunta y los pasajes, nunca las credenciales de Supabase.
-* **Fragmentación sin garantías semánticas:** Cortar por tokens o párrafos puede separar una condición de su consecuencia. Por eso se lee el texto recuperado antes de decidir si alcanza, y no se usa un umbral automático de similitud.
-* **Validación de forma, no de fidelidad:** Que una respuesta RAG pase la validación garantiza que su estructura y sus citas son coherentes, no que cada afirmación esté respaldada por el pasaje. Cada respuesta de la matriz se revisa a mano contra el fragmento citado.
-* **Evaluación sin ajuste posterior:** Las preguntas y su evidencia se fijan antes de ver los rankings y la decisión se toma solo con el conjunto de desarrollo. La reserva confirma, no ajusta; si se abre antes de tiempo se declara como comprometida.
-* **Escritura mínima y con permiso:** La única escritura habilitada es crear un borrador nuevo, con permiso explícito y citas del turno actual. El modelo no elige rutas, el servidor de archivos no puede salir de su carpeta y no existen herramientas para modificar fuentes, cambiar el corpus ni enviar informes.
-* **Separación de procesos y credenciales:** Los servidores MCP corren en procesos separados y no reciben las claves de Groq ni de Supabase. El identificador de conversación separa historiales, pero no autentica a una persona; una aplicación multiusuario necesitará identidad real.
+| Síntoma | Qué revisar |
+|---|---|
+| `Configuración incompleta: Falta la variable...` al arrancar | `app/.env` existe en `app/` y tiene esa variable. |
+| "No pudimos iniciar sesión" | Usuario creado y confirmado en Auth; correo y contraseña. |
+| "Tu usuario no tiene acceso al corpus" | Falta la fila en `app_lectores_corpus` o `CORPUS_PROPIETARIO_ID` es incorrecto. |
+| `ERROR_VALIDACION` "Revisa la función app_buscar_fragmentos" | `02_corpus_compartido.sql` no se ejecutó o la columna vectorial tiene otro nombre. |
+| `ERROR_TECNICO` | Groq (clave, cuota, disponibilidad del modelo) o red. No significa que falten documentos. |
+| Casilla de borrador desactivada | No se ejecutó `preparar_mcp.py`. |
+
+**Limitaciones conocidas.**
+- Presupuesto de 2 operaciones por turno: un borrador que necesite reglas + datos de una fuente + escritura (3 operaciones) termina en `LIMITE_OPERACIONES`. Lo mantenemos y lo registramos en lugar de ampliar el límite sin pruebas nuevas.
+- Contexto: 4 turnos y 24 000 caracteres por decisión; respuestas de hasta 2 500 caracteres.
+- Una cita válida solo prueba que corresponde a un resultado del turno; la fidelidad requiere revisión humana.
+- Los borradores en disco viven en `app/informes_generados/`; el texto también queda en el mensaje persistido en Supabase.
+- Latencia: en Colab un turno con RAG + escritura tardó ~3,3 s; en la app falta medirlo.
+- La sesión de Supabase se renueva automáticamente mientras el servidor sigue activo; si el token expira sin renovarse, hay que volver a iniciar sesión.
+
+## Presentación y evidencias
+
+- Presentación: [`app/presentacion_proyecto.html`](app/presentacion_proyecto.html)
+- Evidencias compartibles: [`evidencias/`](evidencias/) (JSON de la Clase 11, salidas de `pruebas_rls.py`, capturas de la app).
+- Notebook consolidado: [`notebooks/C11_RAG_Agente_MCP.ipynb`](C11_RAG_Agente_MCP.ipynb)
+- Bitácora: [`BITACORA_PROYECTO.md`](BITACORA_PROYECTO.md)
+
+## Bitácora unificada del proyecto
+
+[`BITACORA_PROYECTO.md`](BITACORA_PROYECTO.md) documenta los tres cortes: problema y alcance, arquitectura, decisiones, experimentos y pruebas con resultados, errores y correcciones, limitaciones y aportes. Las evidencias se enlazan con rutas relativas del repositorio.
+
+## Equipo y referencias
+
+| Integrante | Responsabilidad |
+|---|---|
+| Juliana Marín Vélez | Notebooks de los tres cortes, redacción del corpus, configuración de Supabase (corpus, Auth, SQL y RLS), prompts, lógica del sistema (`sistema.py`, `servidor_mcp.py`, agentes y validaciones) y arquitectura de `app/`. |
+| Sophie Rosero Muriel | Soporte y verificación de notebooks, pruebas y matriz de evaluación (Clases 08, 09 y 11), gestión del repositorio, bitácora y documentación, pruebas de la aplicación (`test_controles.py`, `pruebas_rls.py`) y revisión manual de borradores. |
+
+Datos: corpus y fuentes ficticias redactados por el equipo Juliofi. Modelo de embeddings bajo la licencia publicada en su ficha de Hugging Face. Filesystem MCP: licencia del repositorio `modelcontextprotocol/servers`.
+
+- Gradio: [estado de sesión](https://www.gradio.app/guides/state-in-blocks) - Supabase: [Row Level Security](https://supabase.com/docs/guides/database/postgres/row-level-security), [Auth con contraseña](https://supabase.com/docs/reference/python/auth-signinwithpassword), [RPC](https://supabase.com/docs/reference/python/rpc)
+- MCP Python SDK: [cliente](https://py.sdk.modelcontextprotocol.io/client/) - Groq: [Structured Outputs](https://console.groq.com/docs/structured-outputs) - [Filesystem MCP](https://github.com/modelcontextprotocol/servers/tree/main/src/filesystem) - [Kotaemon](https://github.com/Cinnamon/kotaemon) (referencia de clase)
