@@ -1,5 +1,6 @@
 {
   "settingsPopoutWindow": false,
   "promptDelete": false,
-  "showUnsupportedFiles": true
+  "showUnsupportedFiles": true,
+  "alwaysUpdateLinks": true
 }
